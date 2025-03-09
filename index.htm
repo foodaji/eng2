@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کمک ناظر</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            direction: rtl;
+            text-align: right;
+            font-family: Tahoma, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: gray;
+        }
+
+        .report-form {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f7f7f7;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center">لیست پروژه‌های تحت نظارت</h2>
+    
+    <div class="card p-3">
+        <input type="text" id="projectName" class="form-control my-2" placeholder="نام پروژه *" required>
+        <input type="text" id="projectAddress" class="form-control my-2" placeholder="آدرس پروژه">
+        <!-- فیلد تاریخ اضافه شده -->
+        <input type="date" id="projectDate" class="form-control my-2" required>
+        <button onclick="addProject()" class="btn btn-success w-100">➕ افزودن پروژه</button>
+    </div>
+
+    <div id="projectsList" class="mt-3"></div>
+</div>
+
+<footer class="footer">طراحی توسط Hamed Foodaji</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
