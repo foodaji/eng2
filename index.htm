@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>کمک ناظر</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="script.js" defer></script>
     <style>
         body {
             background-color: #f8f9fa;
             direction: rtl;
             text-align: right;
             font-family: Tahoma, sans-serif;
+            padding-bottom: 50px;
         }
 
         .container {
@@ -25,6 +25,12 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .completed-project {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
         }
 
         .footer {
@@ -32,6 +38,12 @@
             margin-top: 20px;
             font-size: 12px;
             color: gray;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
         }
 
         .report-form {
@@ -54,7 +66,92 @@
         }
 
         button {
-            margin: 5px;
+            margin: 2px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert-success {
+            animation: fadeInOut 3s ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .search-container {
+            margin-bottom: 15px;
+        }
+
+        .toggle-btn {
+            width: 100%;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .add-project-form {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .completed-projects-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .active-projects-container {
+            margin-bottom: 20px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .header-buttons button {
+            flex: 1;
+        }
+
+        @media (max-width: 576px) {
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .project-card {
+                padding: 10px;
+            }
+            
+            h5 {
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .header-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
@@ -63,20 +160,473 @@
 <div class="container">
     <h2 class="text-center">لیست پروژه‌های تحت نظارت</h2>
     
-    <div class="card p-3">
+    <div class="header-buttons">
+        <button class="btn btn-primary toggle-btn" onclick="toggleActiveProjects()" id="toggleActiveBtn">
+            پروژه‌ها
+        </button>
+        <button class="btn btn-info toggle-btn" onclick="toggleCompletedProjects()" id="toggleCompletedBtn">
+            پروژه‌های تمام شده
+        </button>
+        <button class="btn btn-success toggle-btn" onclick="toggleAddProjectForm()" id="toggleAddProjectBtn">
+            افزودن پروژه جدید
+        </button>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" class="form-control" placeholder="جستجوی پروژه...">
+    </div>
+    
+    <div id="completedProjectsContainer" class="completed-projects-container">
+        <div id="completedProjectsList"></div>
+    </div>
+    
+    <div id="activeProjectsContainer" class="active-projects-container">
+        <div id="projectsList"></div>
+    </div>
+    
+    <div id="addProjectForm" class="add-project-form card p-3">
         <input type="text" id="projectName" class="form-control my-2" placeholder="نام پروژه *" required>
         <input type="text" id="projectAddress" class="form-control my-2" placeholder="آدرس پروژه">
-        <!-- فیلد تاریخ اضافه شده -->
-        <input type="date" id="projectDate" class="form-control my-2" required>
-        <button onclick="addProject()" class="btn btn-success w-100">➕ افزودن پروژه</button>
+        <input type="text" id="projectDate" class="form-control my-2" placeholder="تاریخ" value="${getCurrentPersianDate()}">
+        <button onclick="addProject()" class="btn btn-success w-100" id="addProjectBtn">
+            <span id="addProjectText">➕ افزودن پروژه</span>
+            <span id="addProjectLoading" class="loading" style="display: none;"></span>
+        </button>
     </div>
 
-    <div id="projectsList" class="mt-3"></div>
+    <div id="successAlert" class="alert alert-success mt-2" style="display: none;"></div>
 </div>
 
 <footer class="footer">طراحی توسط Hamed Foodaji</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const API_URL = "https://api.jsonbin.io/v3/b/67a9a0a1e41b4d34e487fdd1";
+    const API_KEY = "$2a$10$K0GxG/YDDvwcCOicoQSc3OIPqPpUflP5JvKxVStM6sdQYjq4LdXKi";
+    
+    // تابع برای دریافت تاریخ شمسی فعلی
+    function getCurrentPersianDate() {
+        const date = new Date();
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Intl.DateTimeFormat('fa-IR', options).format(date);
+    }
+    
+    // نمایش پیام موفقیت
+    function showSuccessMessage(message) {
+        const alertElement = document.getElementById("successAlert");
+        alertElement.textContent = message;
+        alertElement.style.display = "block";
+        alertElement.style.opacity = "1";
+        
+        setTimeout(() => {
+            alertElement.style.opacity = "0";
+            setTimeout(() => {
+                alertElement.style.display = "none";
+            }, 1000);
+        }, 2000);
+    }
+    
+    // نمایش/مخفی کردن پروژه‌های فعال
+    function toggleActiveProjects() {
+        const container = document.getElementById("activeProjectsContainer");
+        const btn = document.getElementById("toggleActiveBtn");
+        
+        if (container.style.display === "none") {
+            container.style.display = "block";
+            btn.classList.remove("btn-secondary");
+            btn.classList.add("btn-primary");
+        } else {
+            container.style.display = "none";
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-secondary");
+        }
+    }
+    
+    // نمایش/مخفی کردن فرم افزودن پروژه
+    function toggleAddProjectForm() {
+        const form = document.getElementById("addProjectForm");
+        const btn = document.getElementById("toggleAddProjectBtn");
+        
+        if (form.style.display === "block") {
+            form.style.display = "none";
+            btn.classList.remove("btn-secondary");
+            btn.classList.add("btn-success");
+        } else {
+            form.style.display = "block";
+            btn.classList.remove("btn-success");
+            btn.classList.add("btn-secondary");
+            // مخفی کردن لیست پروژه‌های تمام شده اگر باز است
+            document.getElementById("completedProjectsContainer").style.display = "none";
+            document.getElementById("toggleCompletedBtn").classList.remove("btn-secondary");
+            document.getElementById("toggleCompletedBtn").classList.add("btn-info");
+        }
+    }
+    
+    // نمایش/مخفی کردن لیست پروژه‌های تمام شده
+    function toggleCompletedProjects() {
+        const container = document.getElementById("completedProjectsContainer");
+        const btn = document.getElementById("toggleCompletedBtn");
+        
+        if (container.style.display === "block") {
+            container.style.display = "none";
+            btn.classList.remove("btn-secondary");
+            btn.classList.add("btn-info");
+        } else {
+            container.style.display = "block";
+            btn.classList.remove("btn-info");
+            btn.classList.add("btn-secondary");
+            // مخفی کردن فرم افزودن پروژه اگر باز است
+            document.getElementById("addProjectForm").style.display = "none";
+            document.getElementById("toggleAddProjectBtn").classList.remove("btn-secondary");
+            document.getElementById("toggleAddProjectBtn").classList.add("btn-success");
+            // بارگذاری پروژه‌های تمام شده
+            displayProjects();
+        }
+    }
+    
+    // جستجوی زنده
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const searchTerm = this.value.toLowerCase();
+        const activeProjects = document.querySelectorAll("#activeProjectsContainer .project-card");
+        const completedProjects = document.querySelectorAll("#completedProjectsContainer .project-card");
+        
+        activeProjects.forEach(card => {
+            const projectName = card.querySelector("h5").textContent.toLowerCase();
+            card.style.display = projectName.includes(searchTerm) ? "block" : "none";
+        });
+        
+        completedProjects.forEach(card => {
+            const projectName = card.querySelector("h5").textContent.toLowerCase();
+            card.style.display = projectName.includes(searchTerm) ? "block" : "none";
+        });
+    });
+
+    async function fetchProjects() {
+        try {
+            const response = await fetch(API_URL, { headers: { "X-Master-Key": API_KEY } });
+            const data = await response.json();
+            return data.record.projects || [];
+        } catch (error) {
+            console.error("خطا در دریافت پروژه‌ها:", error);
+            return [];
+        }
+    }
+
+    async function saveProjects(projects) {
+        try {
+            const response = await fetch(API_URL, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Master-Key": API_KEY
+                },
+                body: JSON.stringify({ projects })
+            });
+            return response.ok;
+        } catch (error) {
+            console.error("خطا در ذخیره پروژه‌ها:", error);
+            return false;
+        }
+    }
+
+    async function addProject() {
+        const name = document.getElementById("projectName").value.trim();
+        const address = document.getElementById("projectAddress").value.trim();
+        const date = document.getElementById("projectDate").value.trim();
+        
+        if (!name) {
+            alert("نام پروژه را وارد کنید!");
+            return;
+        }
+        
+        if (!date) {
+            alert("تاریخ را وارد کنید!");
+            return;
+        }
+        
+        // نمایش loading
+        const addBtn = document.getElementById("addProjectBtn");
+        const addText = document.getElementById("addProjectText");
+        const loading = document.getElementById("addProjectLoading");
+        
+        addBtn.disabled = true;
+        addText.style.display = "none";
+        loading.style.display = "inline-block";
+        
+        try {
+            let projects = await fetchProjects();
+            projects.push({ name, address, date, reports: [], completed: false });
+            const success = await saveProjects(projects);
+            
+            if (success) {
+                showSuccessMessage("پروژه با موفقیت اضافه شد");
+                document.getElementById("projectName").value = "";
+                document.getElementById("projectAddress").value = "";
+                document.getElementById("projectDate").value = getCurrentPersianDate();
+                await displayProjects();
+                toggleAddProjectForm(); // بستن فرم پس از افزودن
+            } else {
+                alert("خطا در ذخیره پروژه");
+            }
+        } catch (error) {
+            console.error("خطا:", error);
+            alert("خطا در انجام عملیات");
+        } finally {
+            addBtn.disabled = false;
+            addText.style.display = "inline-block";
+            loading.style.display = "none";
+        }
+    }
+
+    async function deleteProject(index) {
+        if (confirm("آیا مطمئن هستید که می‌خواهید این پروژه را حذف کنید؟")) {
+            const projectName = document.querySelector(`#project-${index} h5`).textContent;
+            
+            // نمایش loading
+            const originalText = document.querySelector(`#project-${index} .btn-danger`).textContent;
+            document.querySelector(`#project-${index} .btn-danger`).innerHTML = '<span class="loading"></span>';
+            
+            try {
+                let projects = await fetchProjects();
+                projects.splice(index, 1);
+                const success = await saveProjects(projects);
+                
+                if (success) {
+                    showSuccessMessage(`پروژه "${projectName}" حذف شد`);
+                    await displayProjects();
+                } else {
+                    alert("خطا در حذف پروژه");
+                }
+            } catch (error) {
+                console.error("خطا:", error);
+                alert("خطا در انجام عملیات");
+            } finally {
+                document.querySelector(`#project-${index} .btn-danger`).textContent = originalText;
+            }
+        }
+    }
+
+    async function addReport(index) {
+        document.getElementById(`reportForm-${index}`).style.display = "block";
+        document.getElementById(`reportText-${index}`).focus();
+    }
+
+    async function editReport(projectIndex, reportIndex) {
+        const reportText = document.querySelector(`#project-${projectIndex} .report-text-${reportIndex}`).innerText;
+        const reportDate = document.querySelector(`#project-${projectIndex} .report-date-${reportIndex}`).innerText;
+        document.getElementById(`reportForm-${projectIndex}`).style.display = "block";
+        document.getElementById(`reportText-${projectIndex}`).value = reportText;
+        document.getElementById(`reportDate-${projectIndex}`).value = reportDate;
+        document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-action", "edit");
+        document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-report-index", reportIndex);
+    }
+
+    async function saveReport(projectIndex, action, reportIndex = null) {
+        const reportText = document.getElementById(`reportText-${projectIndex}`).value.trim();
+        const reportDate = document.getElementById(`reportDate-${projectIndex}`).value.trim();
+
+        if (!reportText) {
+            alert("لطفا متن گزارش را وارد کنید.");
+            return;
+        }
+        
+        if (!reportDate) {
+            alert("لطفا تاریخ گزارش را وارد کنید.");
+            return;
+        }
+        
+        // نمایش loading
+        const saveBtn = document.getElementById(`saveReportBtn-${projectIndex}`);
+        const originalText = saveBtn.textContent;
+        saveBtn.innerHTML = '<span class="loading"></span>';
+        saveBtn.disabled = true;
+
+        try {
+            let projects = await fetchProjects();
+
+            if (action === 'add') {
+                projects[projectIndex].reports.push({ date: reportDate, text: reportText });
+            } else if (action === 'edit') {
+                projects[projectIndex].reports[reportIndex] = { date: reportDate, text: reportText };
+            }
+
+            const success = await saveProjects(projects);
+            
+            if (success) {
+                showSuccessMessage(action === 'add' ? "گزارش با موفقیت اضافه شد" : "گزارش با موفقیت ویرایش شد");
+                await displayProjects();
+            } else {
+                alert("خطا در ذخیره گزارش");
+            }
+        } catch (error) {
+            console.error("خطا:", error);
+            alert("خطا در انجام عملیات");
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+            closeReportForm(projectIndex);
+        }
+    }
+
+    function closeReportForm(projectIndex) {
+        document.getElementById(`reportForm-${projectIndex}`).style.display = "none";
+    }
+
+    async function displayProjects() {
+        let projects = await fetchProjects();
+        let activeContainer = document.getElementById("projectsList");
+        let completedContainer = document.getElementById("completedProjectsList");
+        activeContainer.innerHTML = "";
+        completedContainer.innerHTML = "";
+
+        projects.forEach((p, index) => {
+            let projectItem = document.createElement("div");
+            projectItem.className = p.completed ? "project-card completed-project" : "project-card";
+            projectItem.id = `project-${index}`;
+
+            let reportsList = p.reports.map((r, reportIndex) => {
+                return `
+                    <div class="report-item mb-2">
+                        <span class="report-date-${reportIndex}">${r.date}:</span>
+                        <span class="report-text-${reportIndex}">${r.text}</span>
+                        ${!p.completed ? `
+                        <button class="btn btn-outline-secondary btn-sm" onclick="editReport(${index}, ${reportIndex})">ویرایش</button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="deleteReport(${index}, ${reportIndex})">حذف</button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join("");
+
+            if (p.completed) {
+                projectItem.innerHTML = `
+                    <h5>${p.name}</h5>
+                    <p>${p.address ? p.address : "آدرس ثبت نشده"} | تاریخ شروع: ${p.date}</p>
+                    <div class="reports">${reportsList}</div>
+                    <button class="btn btn-warning btn-sm" onclick="toggleProjectStatus(${index})">لغو پایان کار</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProject(${index})">حذف پروژه</button>
+                `;
+                completedContainer.appendChild(projectItem);
+            } else {
+                projectItem.innerHTML = `
+                    <h5>${p.name}</h5>
+                    <p>${p.address ? p.address : "آدرس ثبت نشده"} | تاریخ شروع: ${p.date}</p>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProject(${index})">❌ حذف</button>
+                    <button class="btn btn-primary btn-sm" onclick="addReport(${index})">➕ افزودن گزارش</button>
+                    <button class="btn btn-success btn-sm" onclick="toggleProjectStatus(${index})">پایان کار</button>
+                    <button class="btn btn-warning btn-sm" onclick="editProject(${index})">ویرایش مشخصات</button>
+                    <div class="reports mt-2">${reportsList}</div>
+                    
+                    <div id="reportForm-${index}" class="report-form" style="display: none;">
+                        <textarea id="reportText-${index}" placeholder="متن گزارش را وارد کنید..."></textarea><br>
+                        <input type="text" id="reportDate-${index}" value="${getCurrentPersianDate()}" /><br>
+                        <button id="saveReportBtn-${index}" class="btn btn-primary btn-sm" onclick="saveReport(${index}, 'add')">ثبت گزارش</button>
+                        <button class="btn btn-secondary btn-sm" onclick="closeReportForm(${index})">بستن</button>
+                    </div>
+                `;
+                activeContainer.appendChild(projectItem);
+            }
+        });
+    }
+
+    async function toggleProjectStatus(index) {
+        // نمایش loading
+        const btn = document.querySelector(`#project-${index} .btn-success, #project-${index} .btn-warning`);
+        const originalText = btn.textContent;
+        btn.innerHTML = '<span class="loading"></span>';
+        btn.disabled = true;
+
+        try {
+            let projects = await fetchProjects();
+            projects[index].completed = !projects[index].completed;
+            const success = await saveProjects(projects);
+            
+            if (success) {
+                showSuccessMessage(projects[index].completed ? "پروژه به لیست پایان یافته‌ها اضافه شد" : "پروژه به لیست فعال بازگشت");
+                await displayProjects();
+            } else {
+                alert("خطا در تغییر وضعیت پروژه");
+            }
+        } catch (error) {
+            console.error("خطا:", error);
+            alert("خطا در انجام عملیات");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    }
+
+    async function deleteReport(projectIndex, reportIndex) {
+        if (confirm("آیا مطمئن هستید که می‌خواهید این گزارش را حذف کنید؟")) {
+            // نمایش loading
+            const deleteBtn = document.querySelector(`#project-${projectIndex} .btn-outline-danger`);
+            const originalText = deleteBtn.textContent;
+            deleteBtn.innerHTML = '<span class="loading"></span>';
+            deleteBtn.disabled = true;
+
+            try {
+                let projects = await fetchProjects();
+                projects[projectIndex].reports.splice(reportIndex, 1);
+                const success = await saveProjects(projects);
+                
+                if (success) {
+                    showSuccessMessage("گزارش با موفقیت حذف شد");
+                    await displayProjects();
+                } else {
+                    alert("خطا در حذف گزارش");
+                }
+            } catch (error) {
+                console.error("خطا:", error);
+                alert("خطا در انجام عملیات");
+            } finally {
+                deleteBtn.disabled = false;
+                deleteBtn.textContent = originalText;
+            }
+        }
+    }
+
+    async function editProject(index) {
+        const projects = await fetchProjects();
+        const project = projects[index];
+        const newName = prompt("ویرایش نام پروژه:", project.name);
+        if (newName === null) return;
+        
+        const newAddress = prompt("ویرایش آدرس پروژه:", project.address);
+        if (newAddress === null) return;
+
+        // نمایش loading
+        const editBtn = document.querySelector(`#project-${index} .btn-warning`);
+        const originalText = editBtn.textContent;
+        editBtn.innerHTML = '<span class="loading"></span>';
+        editBtn.disabled = true;
+
+        try {
+            project.name = newName;
+            project.address = newAddress;
+            const success = await saveProjects(projects);
+            
+            if (success) {
+                showSuccessMessage("مشخصات پروژه با موفقیت ویرایش شد");
+                await displayProjects();
+            } else {
+                alert("خطا در ویرایش پروژه");
+            }
+        } catch (error) {
+            console.error("خطا:", error);
+            alert("خطا در انجام عملیات");
+        } finally {
+            editBtn.disabled = false;
+            editBtn.textContent = originalText;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // تنظیم تاریخ شمسی فعلی در فرم افزودن پروژه
+        document.getElementById("projectDate").value = getCurrentPersianDate();
+        // نمایش لیست پروژه‌های فعال به صورت پیش‌فرض
+        displayProjects();
+    });
+</script>
 
 </body>
 </html>
