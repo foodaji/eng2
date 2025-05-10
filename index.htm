@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>کمک ناظر</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -117,6 +118,7 @@
         }
 
         .active-projects-container {
+            display: none;
             margin-bottom: 20px;
         }
 
@@ -128,6 +130,30 @@
 
         .header-buttons button {
             flex: 1;
+        }
+
+        .project-stages {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 5px;
+        }
+
+        .stage-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stage-item.completed {
+            color: #28a745;
+        }
+
+        .stage-checkbox {
+            margin-left: 10px;
+            cursor: pointer;
         }
 
         @media (max-width: 576px) {
@@ -161,13 +187,13 @@
     <h2 class="text-center">لیست پروژه‌های تحت نظارت</h2>
     
     <div class="header-buttons">
-        <button class="btn btn-primary toggle-btn" onclick="toggleActiveProjects()" id="toggleActiveBtn">
+        <button class="btn btn-primary toggle-btn" onclick="toggleSection('activeProjectsContainer', this)" id="toggleActiveBtn">
             پروژه‌ها
         </button>
-        <button class="btn btn-info toggle-btn" onclick="toggleCompletedProjects()" id="toggleCompletedBtn">
+        <button class="btn btn-info toggle-btn" onclick="toggleSection('completedProjectsContainer', this)" id="toggleCompletedBtn">
             پروژه‌های تمام شده
         </button>
-        <button class="btn btn-success toggle-btn" onclick="toggleAddProjectForm()" id="toggleAddProjectBtn">
+        <button class="btn btn-success toggle-btn" onclick="toggleSection('addProjectForm', this)" id="toggleAddProjectBtn">
             افزودن پروژه جدید
         </button>
     </div>
@@ -205,6 +231,14 @@
     const API_URL = "https://api.jsonbin.io/v3/b/67a9a0a1e41b4d34e487fdd1";
     const API_KEY = "$2a$10$K0GxG/YDDvwcCOicoQSc3OIPqPpUflP5JvKxVStM6sdQYjq4LdXKi";
     
+    // مراحل پروژه
+    const PROJECT_STAGES = [
+        { id: 'assembly', name: 'همبندی' },
+        { id: 'piping', name: 'لوله گذاری' },
+        { id: 'wiring', name: 'سیم کشی' },
+        { id: 'equipment', name: 'نصب تجهیزات' }
+    ];
+    
     // تابع برای دریافت تاریخ شمسی فعلی
     function getCurrentPersianDate() {
         const date = new Date();
@@ -227,61 +261,34 @@
         }, 2000);
     }
     
-    // نمایش/مخفی کردن پروژه‌های فعال
-    function toggleActiveProjects() {
-        const container = document.getElementById("activeProjectsContainer");
-        const btn = document.getElementById("toggleActiveBtn");
+    // نمایش/مخفی کردن بخش‌ها
+    function toggleSection(sectionId, button) {
+        // مخفی کردن تمام بخش‌ها
+        document.getElementById('activeProjectsContainer').style.display = 'none';
+        document.getElementById('completedProjectsContainer').style.display = 'none';
+        document.getElementById('addProjectForm').style.display = 'none';
         
-        if (container.style.display === "none") {
-            container.style.display = "block";
-            btn.classList.remove("btn-secondary");
-            btn.classList.add("btn-primary");
-        } else {
-            container.style.display = "none";
-            btn.classList.remove("btn-primary");
-            btn.classList.add("btn-secondary");
-        }
-    }
-    
-    // نمایش/مخفی کردن فرم افزودن پروژه
-    function toggleAddProjectForm() {
-        const form = document.getElementById("addProjectForm");
-        const btn = document.getElementById("toggleAddProjectBtn");
+        // بازنشانی رنگ دکمه‌ها
+        document.getElementById('toggleActiveBtn').classList.remove('btn-secondary');
+        document.getElementById('toggleActiveBtn').classList.add('btn-primary');
+        document.getElementById('toggleCompletedBtn').classList.remove('btn-secondary');
+        document.getElementById('toggleCompletedBtn').classList.add('btn-info');
+        document.getElementById('toggleAddProjectBtn').classList.remove('btn-secondary');
+        document.getElementById('toggleAddProjectBtn').classList.add('btn-success');
         
-        if (form.style.display === "block") {
-            form.style.display = "none";
-            btn.classList.remove("btn-secondary");
-            btn.classList.add("btn-success");
+        // نمایش بخش مورد نظر
+        const section = document.getElementById(sectionId);
+        if (section.style.display === 'block') {
+            section.style.display = 'none';
         } else {
-            form.style.display = "block";
-            btn.classList.remove("btn-success");
-            btn.classList.add("btn-secondary");
-            // مخفی کردن لیست پروژه‌های تمام شده اگر باز است
-            document.getElementById("completedProjectsContainer").style.display = "none";
-            document.getElementById("toggleCompletedBtn").classList.remove("btn-secondary");
-            document.getElementById("toggleCompletedBtn").classList.add("btn-info");
-        }
-    }
-    
-    // نمایش/مخفی کردن لیست پروژه‌های تمام شده
-    function toggleCompletedProjects() {
-        const container = document.getElementById("completedProjectsContainer");
-        const btn = document.getElementById("toggleCompletedBtn");
-        
-        if (container.style.display === "block") {
-            container.style.display = "none";
-            btn.classList.remove("btn-secondary");
-            btn.classList.add("btn-info");
-        } else {
-            container.style.display = "block";
-            btn.classList.remove("btn-info");
-            btn.classList.add("btn-secondary");
-            // مخفی کردن فرم افزودن پروژه اگر باز است
-            document.getElementById("addProjectForm").style.display = "none";
-            document.getElementById("toggleAddProjectBtn").classList.remove("btn-secondary");
-            document.getElementById("toggleAddProjectBtn").classList.add("btn-success");
-            // بارگذاری پروژه‌های تمام شده
-            displayProjects();
+            section.style.display = 'block';
+            button.classList.remove('btn-primary', 'btn-info', 'btn-success');
+            button.classList.add('btn-secondary');
+            
+            // اگر بخش پروژه‌ها است، نمایش لیست
+            if (sectionId === 'activeProjectsContainer' || sectionId === 'completedProjectsContainer') {
+                displayProjects();
+            }
         }
     }
     
@@ -356,7 +363,24 @@
         
         try {
             let projects = await fetchProjects();
-            projects.push({ name, address, date, reports: [], completed: false });
+            
+            // ایجاد مراحل پروژه به صورت پیش‌فرض
+            const stages = PROJECT_STAGES.map(stage => ({
+                id: stage.id,
+                name: stage.name,
+                completed: false,
+                date: ''
+            }));
+            
+            projects.push({ 
+                name, 
+                address, 
+                date, 
+                reports: [], 
+                completed: false,
+                stages: stages
+            });
+            
             const success = await saveProjects(projects);
             
             if (success) {
@@ -365,7 +389,7 @@
                 document.getElementById("projectAddress").value = "";
                 document.getElementById("projectDate").value = getCurrentPersianDate();
                 await displayProjects();
-                toggleAddProjectForm(); // بستن فرم پس از افزودن
+                toggleSection('activeProjectsContainer', document.getElementById('toggleActiveBtn'));
             } else {
                 alert("خطا در ذخیره پروژه");
             }
@@ -473,6 +497,38 @@
         document.getElementById(`reportForm-${projectIndex}`).style.display = "none";
     }
 
+    async function toggleStage(projectIndex, stageId) {
+        // نمایش loading
+        const checkbox = document.querySelector(`#project-${projectIndex} #stage-${stageId}`);
+        checkbox.disabled = true;
+        checkbox.innerHTML = '<span class="loading"></span>';
+        
+        try {
+            let projects = await fetchProjects();
+            const project = projects[projectIndex];
+            const stageIndex = project.stages.findIndex(s => s.id === stageId);
+            
+            if (stageIndex !== -1) {
+                project.stages[stageIndex].completed = !project.stages[stageIndex].completed;
+                project.stages[stageIndex].date = project.stages[stageIndex].completed ? getCurrentPersianDate() : '';
+                
+                const success = await saveProjects(projects);
+                
+                if (success) {
+                    showSuccessMessage(`مرحله ${project.stages[stageIndex].name} با موفقیت به‌روزرسانی شد`);
+                    await displayProjects();
+                } else {
+                    alert("خطا در به‌روزرسانی مرحله");
+                }
+            }
+        } catch (error) {
+            console.error("خطا:", error);
+            alert("خطا در انجام عملیات");
+        } finally {
+            checkbox.disabled = false;
+        }
+    }
+
     async function displayProjects() {
         let projects = await fetchProjects();
         let activeContainer = document.getElementById("projectsList");
@@ -498,10 +554,32 @@
                 `;
             }).join("");
 
+            // ایجاد لیست مراحل پروژه
+            let stagesList = '';
+            if (p.stages && p.stages.length > 0) {
+                stagesList = '<div class="project-stages"><h6>مراحل پروژه:</h6>';
+                p.stages.forEach(stage => {
+                    stagesList += `
+                        <div class="stage-item ${stage.completed ? 'completed' : ''}">
+                            <input type="checkbox" 
+                                   id="stage-${stage.id}" 
+                                   class="stage-checkbox" 
+                                   ${stage.completed ? 'checked' : ''}
+                                   ${p.completed ? 'disabled' : ''}
+                                   onclick="toggleStage(${index}, '${stage.id}')">
+                            <label for="stage-${stage.id}">${stage.name}</label>
+                            ${stage.completed ? `<small> (تکمیل شده در ${stage.date})</small>` : ''}
+                        </div>
+                    `;
+                });
+                stagesList += '</div>';
+            }
+
             if (p.completed) {
                 projectItem.innerHTML = `
                     <h5>${p.name}</h5>
                     <p>${p.address ? p.address : "آدرس ثبت نشده"} | تاریخ شروع: ${p.date}</p>
+                    ${stagesList}
                     <div class="reports">${reportsList}</div>
                     <button class="btn btn-warning btn-sm" onclick="toggleProjectStatus(${index})">لغو پایان کار</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteProject(${index})">حذف پروژه</button>
@@ -511,6 +589,7 @@
                 projectItem.innerHTML = `
                     <h5>${p.name}</h5>
                     <p>${p.address ? p.address : "آدرس ثبت نشده"} | تاریخ شروع: ${p.date}</p>
+                    ${stagesList}
                     <button class="btn btn-danger btn-sm" onclick="deleteProject(${index})">❌ حذف</button>
                     <button class="btn btn-primary btn-sm" onclick="addReport(${index})">➕ افزودن گزارش</button>
                     <button class="btn btn-success btn-sm" onclick="toggleProjectStatus(${index})">پایان کار</button>
@@ -623,8 +702,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         // تنظیم تاریخ شمسی فعلی در فرم افزودن پروژه
         document.getElementById("projectDate").value = getCurrentPersianDate();
-        // نمایش لیست پروژه‌های فعال به صورت پیش‌فرض
-        displayProjects();
     });
 </script>
 
