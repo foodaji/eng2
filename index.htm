@@ -3,82 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>کمک ناظر</title>
+    <title>ناظر+</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
+        @import url('https://cdn.rawgit.com/rastikerdar/vazir-font/v27.2.0/dist/font-face.css');
+
         body {
-            background-color: #f8f9fa;
+            background-color: #f0f2f5; /* Lighter background */
             direction: rtl;
             text-align: right;
-            font-family: Tahoma, sans-serif;
-            padding-bottom: 50px;
+            font-family: 'Vazirmatn', sans-serif;
+            padding-bottom: 60px; /* More space for footer */
+            color: #333;
+        }
+
+        .app-header {
+            background-color: #007bff; /* Primary blue */
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .app-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
         }
 
         .container {
             max-width: 600px;
-            margin-top: 20px;
+            margin-top: 0px; /* Adjusted for header */
+            padding: 0 15px; /* Padding for small screens */
         }
 
-        .project-card {
+        .project-card, .user-card, .card {
             background: white;
             padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+            margin-bottom: 15px;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Hover effect */
+            border: none; /* Remove default card border */
+        }
+
+        .project-card:hover, .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         .completed-project {
-            background-color: #d4edda;
-            border-left: 5px solid #28a745;
+            background-color: #e6ffee; /* Lighter green for completed */
+            border-left: 6px solid #28a745;
+            opacity: 0.9; /* Slightly less prominent */
         }
 
         .footer {
             text-align: center;
             margin-top: 20px;
-            font-size: 12px;
-            color: gray;
+            font-size: 13px;
+            color: #6c757d;
             position: fixed;
             bottom: 0;
             width: 100%;
             background: white;
-            padding: 10px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            box-shadow: 0 -3px 8px rgba(0,0,0,0.08); /* Softer shadow */
+            z-index: 999;
         }
 
         .report-form {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f7f7f7;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 15px; /* Increased margin */
+            padding: 15px;
+            background-color: #fbfbfb; /* Slightly different background */
+            border-radius: 8px;
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05); /* Inset shadow */
+            border: 1px solid #e9ecef; /* Light border */
         }
 
-        textarea {
+        /* Styles for labels and inputs */
+        .form-label {
+            display: block;
+            margin-bottom: 6px; /* Slightly more space */
+            font-weight: 600; /* Bolder */
+            color: #495057;
+            font-size: 0.95rem;
+        }
+        .form-label.required::after {
+            content: " *";
+            color: #dc3545; /* Red color */
+        }
+        input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], textarea, .form-control {
             width: 100%;
-            height: 100px;
-            margin-bottom: 10px;
+            padding: 10px 12px; /* Slightly more padding */
+            margin-bottom: 18px; /* Consistent bottom margin for spacing */
+            border: 1px solid #ced4da;
+            border-radius: 6px; /* Slightly more rounded */
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus, .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+        .report-form textarea, .report-form input[type="text"] {
+             margin-bottom: 12px;
         }
 
-        input {
+        /* Password toggle container */
+        .password-container {
+            position: relative;
             width: 100%;
-            margin-bottom: 10px;
         }
+        .password-container input {
+            padding-right: 40px; /* Space for icon */
+        }
+        .toggle-password {
+            position: absolute;
+            left: 10px; /* Adjusted for RTL */
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        .toggle-password:hover {
+            color: #007bff;
+        }
+
 
         button {
-            margin: 2px;
+            margin: 4px 0; /* More margin */
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease-in-out;
+            border: none; /* Remove default button border */
         }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #e9ecef !important;
+            color: #6c757d !important;
+        }
+
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-success:hover { background-color: #1e7e34; }
+        .btn-info { background-color: #17a2b8; color: white; }
+        .btn-info:hover { background-color: #117a8b; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-danger:hover { background-color: #bd2130; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .btn-dark { background-color: #343a40; color: white; }
+        .btn-dark:hover { background-color: #1d2124; }
 
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(0,0,0,.3);
+            border: 3px solid rgba(255,255,255,.3); /* White spinner for dark buttons */
             border-radius: 50%;
-            border-top-color: #000;
+            border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
+        }
+        .btn-secondary .loading, .btn-dark .loading, .btn-outline-primary .loading {
+             border-color: rgba(0,0,0,.3);
+             border-top-color: #000;
         }
 
         @keyframes spin {
@@ -98,7 +203,7 @@
         }
 
         .search-container {
-            margin-bottom: 15px;
+            margin-bottom: 20px; /* More space */
         }
 
         .toggle-btn {
@@ -107,18 +212,9 @@
             font-weight: bold;
         }
 
-        .add-project-form {
-            display: none;
-            margin-bottom: 20px;
-        }
-
-        .completed-projects-container {
-            display: none;
-            margin-bottom: 20px;
-        }
-
-        .active-projects-container {
-            display: none;
+        .add-project-form, .completed-projects-container, .active-projects-container,
+        #loginPage, #registerPage, #profilePage, #adminDashboard, #subscriptionPage, #adminAllProjects {
+            display: none; /* All hidden by default */
             margin-bottom: 20px;
         }
 
@@ -126,133 +222,756 @@
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
 
         .header-buttons button {
             flex: 1;
+            min-width: 120px; /* Ensure buttons don't get too small */
         }
 
+        /* Project stages styles */
         .project-stages {
             margin: 15px 0;
-            padding: 10px;
-            background: #f0f8ff;
-            border-radius: 5px;
+            padding: 12px;
+            background: #f8fafd; /* Light blueish background */
+            border-radius: 8px;
+            border: 1px solid #e0e7ed; /* Light border */
         }
 
         .stage-item {
             display: flex;
             align-items: center;
-            margin: 5px 0;
-            padding: 5px;
-            border-bottom: 1px solid #eee;
+            margin: 8px 0;
+            padding: 6px 0;
+            border-bottom: 1px dotted #eee; /* Dotted line */
+            font-weight: 500;
+            color: #495057;
+        }
+        .stage-item:last-child {
+            border-bottom: none;
         }
 
         .stage-item.completed {
             color: #28a745;
+            font-weight: bold;
         }
 
         .stage-checkbox {
             margin-left: 10px;
             cursor: pointer;
+            transform: scale(1.2); /* Slightly larger checkbox */
         }
+
+        .stage-checkbox:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Admin panel styles */
+        .user-list, .plans-list-table {
+            width: 100%;
+            border-collapse: separate; /* For rounded borders */
+            border-spacing: 0;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners apply */
+        }
+
+        .user-list th, .user-list td, .plans-list-table th, .plans-list-table td {
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            text-align: right;
+        }
+
+        .user-list th, .plans-list-table th {
+            background-color: #e9ecef;
+            font-weight: bold;
+            color: #343a40;
+            position: sticky; /* Sticky headers for scrollable tables */
+            top: 0;
+            z-index: 1;
+        }
+        .user-list tr:hover, .plans-list-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Subscription Plans Card View */
+        #subscriptionPlansList .card {
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        #subscriptionPlansList .card-body {
+            padding: 20px;
+        }
+        #subscriptionPlansList .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        #subscriptionPlansList .card-text {
+            margin-bottom: 5px;
+            color: #495057;
+        }
+        #subscriptionPlansList .card-text strong {
+            color: #333;
+        }
+        #subscriptionPlansList .price-info {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 15px;
+        }
+        #subscriptionPlansList .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 10px;
+        }
+        #subscriptionPlansList .discounted-price {
+            font-size: 1.2rem;
+            color: #dc3545;
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+        #subscriptionPlansList .btn-primary {
+            width: 100%;
+        }
+
+        /* Loading Overlay */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure it's on top of everything */
+        }
+        #loadingOverlay .loading {
+            width: 50px;
+            height: 50px;
+            border-width: 5px;
+            border-top-color: #fff; /* White spinner */
+            border-bottom-color: #fff; /* White spinner */
+            border-left-color: #fff; /* White spinner */
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: none;
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 15px;
+        }
+        .modal-title {
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        .modal-body {
+            padding: 25px;
+        }
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        .btn-close {
+            background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3csvg%3e") center/1em auto no-repeat;
+            opacity: 1;
+        }
+
+        /* Project Card specific styles */
+        .project-card .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .project-card .project-header h5 {
+            margin: 0;
+            flex-grow: 1; /* Allow title to take space */
+            padding-left: 10px; /* Space before icon */
+        }
+
+        .project-card .project-details {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .project-card .project-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .project-card .project-actions button {
+             margin: 0; /* Remove extra margin */
+        }
+
+        /* Progress Bar inside card */
+        .project-progress-bar {
+            height: 15px; /* Thinner progress bar */
+            margin-top: 8px; /* Space below title */
+            margin-bottom: 10px;
+            font-size: 0.7rem; /* Smaller text in bar */
+            line-height: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+         .project-card .progress {
+            height: 15px;
+            margin-top: 8px;
+            margin-bottom: 10px;
+         }
+         .project-card .progress-bar {
+             font-size: 0.7rem;
+             line-height: 15px;
+         }
 
         @media (max-width: 576px) {
             .btn-sm {
                 padding: 0.25rem 0.5rem;
                 font-size: 0.875rem;
             }
-            
-            .project-card {
+
+            .project-card, .user-card, .card {
                 padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             }
-            
-            h5 {
-                font-size: 1rem;
+
+            h5, h3 {
+                font-size: 1.1rem;
             }
-            
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            .app-header h1 {
+                font-size: 1.5rem;
+            }
+
             .container {
                 padding: 0 10px;
             }
-            
+
             .header-buttons {
                 flex-direction: column;
-                gap: 5px;
+                gap: 8px;
             }
+            .header-buttons button {
+                min-width: unset; /* Remove min-width on small screens */
+            }
+
+            .user-list thead {
+                display: none; /* Hide table headers on small screens */
+            }
+
+            .user-list, .user-list tbody, .user-list tr, .user-list td {
+                display: block;
+                width: 100%;
+            }
+
+            .user-list tr {
+                margin-bottom: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            .user-list td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border: none;
+                word-break: break-word; /* Break long words */
+            }
+
+            .user-list td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
+             .project-card .project-header {
+                 flex-direction: column;
+                 align-items: flex-start;
+                 gap: 5px;
+             }
+             .project-card .project-header h5 {
+                 padding-left: 0;
+             }
+             .project-card .project-actions {
+                 flex-direction: column;
+                 align-items: flex-end;
+             }
         }
     </style>
 </head>
 <body>
 
+<div id="loadingOverlay" style="display: none;">
+    <div class="loading"></div>
+</div>
+
+<div class="app-header">
+    <h1>ناظر+</h1>
+</div>
+
 <div class="container">
-    <h2 class="text-center">لیست پروژه‌های تحت نظارت</h2>
-    
-    <div class="header-buttons">
-        <button class="btn btn-primary toggle-btn" onclick="toggleSection('activeProjectsContainer', this)" id="toggleActiveBtn">
-            پروژه‌ها
-        </button>
-        <button class="btn btn-info toggle-btn" onclick="toggleSection('completedProjectsContainer', this)" id="toggleCompletedBtn">
-            پروژه‌های تمام شده
-        </button>
-        <button class="btn btn-success toggle-btn" onclick="toggleSection('addProjectForm', this)" id="toggleAddProjectBtn">
-            افزودن پروژه جدید
-        </button>
-    </div>
-    
-    <div class="search-container">
-        <input type="text" id="searchInput" class="form-control" placeholder="جستجوی پروژه...">
-    </div>
-    
-    <div id="completedProjectsContainer" class="completed-projects-container">
-        <div id="completedProjectsList"></div>
-    </div>
-    
-    <div id="activeProjectsContainer" class="active-projects-container">
-        <div id="projectsList"></div>
-    </div>
-    
-    <div id="addProjectForm" class="add-project-form card p-3">
-        <input type="text" id="projectName" class="form-control my-2" placeholder="نام پروژه *" required>
-        <input type="text" id="projectAddress" class="form-control my-2" placeholder="آدرس پروژه">
-        <input type="text" id="projectDate" class="form-control my-2" placeholder="تاریخ" value="${getCurrentPersianDate()}">
-        <button onclick="addProject()" class="btn btn-success w-100" id="addProjectBtn">
-            <span id="addProjectText">➕ افزودن پروژه</span>
-            <span id="addProjectLoading" class="loading" style="display: none;"></span>
-        </button>
+    <div id="loginPage">
+        <h3 class="text-center">ورود به سامانه</h3>
+        <div class="card p-3 mt-3">
+            <label for="loginUsername" class="form-label required">نام کاربری:</label>
+            <input type="text" id="loginUsername" placeholder="نام کاربری" required>
+
+            <label for="loginPassword" class="form-label required">رمز عبور:</label>
+            <div class="password-container">
+                <input type="password" id="loginPassword" placeholder="رمز عبور" required>
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('loginPassword')">
+                    <i class="bi bi-eye-slash"></i>
+                </button>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-2" onclick="login()">ورود</button>
+            <button class="btn btn-info w-100 mb-2" onclick="showRegisterPage()">ثبت نام</button>
+            <div id="loginError" class="text-danger mt-2" style="display: none;"></div>
+        </div>
     </div>
 
-    <div id="successAlert" class="alert alert-success mt-2" style="display: none;"></div>
+    <div id="registerPage">
+        <h3 class="text-center">ثبت نام کاربر جدید</h3>
+        <div class="card p-3 mt-3">
+            <label for="registerName" class="form-label required">نام (فارسی):</label>
+            <input type="text" id="registerName" placeholder="نام (فارسی)" required>
+
+            <label for="registerUsername" class="form-label required">نام کاربری (انگلیسی):</label>
+            <input type="text" id="registerUsername" placeholder="نام کاربری (انگلیسی)" required>
+
+            <label for="registerEmail" class="form-label">ایمیل:</label>
+            <input type="email" id="registerEmail" placeholder="ایمیل (اختیاری)">
+
+            <label for="registerMobile" class="form-label required">شماره موبایل (۰۹xxxxxxxxx):</label>
+            <input type="tel" id="registerMobile" placeholder="شماره موبایل (۰۹xxxxxxxxx)" required>
+
+            <label for="registerPassword" class="form-label required">رمز عبور:</label>
+            <div class="password-container">
+                <input type="password" id="registerPassword" placeholder="رمز عبور" required>
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('registerPassword')">
+                    <i class="bi bi-eye-slash"></i>
+                </button>
+            </div>
+
+            <label for="registerConfirmPassword" class="form-label required">تکرار رمز عبور:</label>
+            <div class="password-container">
+                <input type="password" id="registerConfirmPassword" placeholder="تکرار رمز عبور" required>
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('registerConfirmPassword')">
+                    <i class="bi bi-eye-slash"></i>
+                </button>
+            </div>
+
+            <button class="btn btn-success w-100 mb-2" onclick="registerUser()">ثبت نام</button>
+            <button class="btn btn-secondary w-100" onclick="showLoginPage()">بازگشت به ورود</button>
+            <div id="registerError" class="text-danger mt-2" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div id="mainApp" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h5 class="text-center mb-0" id="welcomeMessage"></h5>
+            <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0">
+                <button class="btn btn-secondary btn-sm" onclick="showProjectsPage()" id="backToProjectsBtn" style="display: none;">پروژه‌ها</button>
+                <button class="btn btn-info btn-sm" onclick="showProfilePage()">پروفایل</button>
+                <button class="btn btn-primary btn-sm" onclick="showSubscriptionPage()" id="subscriptionBtn">اشتراک من</button>
+                <button id="adminPanelBtn" class="btn btn-dark btn-sm" onclick="showAdminPanel()" style="display: none;">پنل مدیریت</button>
+                <button class="btn btn-danger btn-sm" onclick="logout()">خروج</button>
+            </div>
+        </div>
+
+        <div id="subscriptionMessage" class="alert alert-warning text-center" style="display: none;"></div>
+
+        <div id="adminDashboard" style="display: none;">
+            <h3 class="text-center">پنل مدیریت</h3>
+            <div class="card p-3 mt-3">
+                <h5 class="text-center">مدیریت کاربران</h5>
+                <table class="user-list">
+                    <thead>
+                        <tr>
+                            <th>نام</th>
+                            <th>نام کاربری</th>
+                            <th>موبایل</th>
+                            <th>تاریخ ثبت</th>
+                            <th>نقش</th>
+                            <th>وضعیت اشتراک</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                    </tbody>
+                </table>
+                <button class="btn btn-primary mt-3 w-100" onclick="showAllUserProjectsForAdmin()">مشاهده همه پروژه‌ها</button>
+            </div>
+
+            <div class="card p-3 mt-3">
+                <h5 class="text-center">مدیریت پلن‌های اشتراک</h5>
+                <label for="planName" class="form-label required">نام پلن:</label>
+                <input type="text" id="planName" placeholder="مثال: 1 ماهه طلایی" required>
+
+                <label for="planDuration" class="form-label required">مدت (ماه):</label>
+                <input type="number" id="planDuration" placeholder="مثال: 1" required min="1">
+
+                <label for="planPrice" class="form-label required">مبلغ (تومان):</label>
+                <input type="number" id="planPrice" placeholder="مثال: 100000" required min="0">
+
+                <label for="planDiscountedPrice" class="form-label">مبلغ با تخفیف (تومان):</label>
+                <input type="number" id="planDiscountedPrice" placeholder="اختیاری" min="0">
+
+                <button class="btn btn-success w-100 mb-2" onclick="addPlan()">افزودن پلن</button>
+                <div id="planError" class="text-danger mt-2" style="display: none;"></div>
+                <div id="plansList" class="mt-3">
+                    <h6 class="mb-2">پلن‌های فعلی:</h6>
+                    <table class="plans-list-table">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>مدت (ماه)</th>
+                                <th>مبلغ (تومان)</th>
+                                <th>مبلغ با تخفیف (تومان)</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="plansTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card p-3 mt-3">
+                <h5 class="text-center">مدیریت کدهای هدیه</h5>
+                <label for="giftCode" class="form-label required">کد هدیه:</label>
+                <input type="text" id="giftCode" placeholder="مثال: GIFT123" required>
+
+                <label for="giftCodeUses" class="form-label required">تعداد استفاده:</label>
+                <input type="number" id="giftCodeUses" placeholder="مثال: 10" required min="1">
+
+                <label for="giftCodeDuration" class="form-label required">مدت اشتراک (ماه):</label>
+                <input type="number" id="giftCodeDuration" placeholder="مثال: 3" required min="1">
+
+                <label for="giftCodeExpiry" class="form-label required">تاریخ انقضای کد:</label>
+                <input type="date" id="giftCodeExpiry" required>
+
+                <button class="btn btn-success w-100 mb-2" onclick="addGiftCode()">افزودن کد هدیه</button>
+                <div id="giftCodeError" class="text-danger mt-2" style="display: none;"></div>
+                <div id="giftCodesList" class="mt-3">
+                    <h6 class="mb-2">کدهای هدیه فعلی:</h6>
+                    <table class="plans-list-table">
+                        <thead>
+                            <tr>
+                                <th>کد</th>
+                                <th>استفاده‌های باقی‌مانده</th>
+                                <th>مدت اشتراک (ماه)</th>
+                                <th>تاریخ انقضا کد</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="giftCodesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+             <div class="card p-3 mt-3">
+                <h5 class="text-center">لیست واریزی‌ها</h5>
+                <div id="paymentsListContent" class="mt-3">
+                    <table class="plans-list-table">
+                        <thead>
+                            <tr>
+                                <th>نام کاربر</th>
+                                <th>پلن/کد</th>
+                                <th>مبلغ (تومان)</th>
+                                <th>تاریخ</th>
+                                <th>نوع</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="adminAllProjects" style="display: none;">
+            <h3 class="text-center">همه پروژه‌های کاربران</h3>
+            <div id="allUserProjectsList">
+                </div>
+        </div>
+
+        <div id="userProjectSection">
+            <div class="header-buttons">
+                <button class="btn btn-primary toggle-btn" onclick="toggleSection('activeProjectsContainer', this)" id="toggleActiveBtn">
+                    پروژه‌های من
+                </button>
+                <button class="btn btn-info toggle-btn" onclick="toggleSection('completedProjectsContainer', this)" id="toggleCompletedBtn">
+                    پروژه‌های تمام شده
+                </button>
+                <button class="btn btn-success toggle-btn" onclick="toggleSection('addProjectForm', this)" id="toggleAddProjectBtn">
+                    افزودن پروژه جدید
+                </button>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" class="form-control" placeholder="جستجوی پروژه...">
+            </div>
+
+            <div id="completedProjectsContainer" class="completed-projects-container">
+                <div id="completedProjectsList"></div>
+            </div>
+
+            <div id="activeProjectsContainer" class="active-projects-container">
+                <div id="projectsList"></div>
+            </div>
+
+            <div id="addProjectForm" class="add-project-form card p-3">
+                <label for="projectName" class="form-label required">نام پروژه:</label>
+                <input type="text" id="projectName" class="form-control" placeholder="نام پروژه" required>
+
+                <label for="projectAddress" class="form-label">آدرس پروژه:</label>
+                <input type="text" id="projectAddress" class="form-control" placeholder="آدرس پروژه">
+
+                <label for="projectDate" class="form-label required">تاریخ شروع/ارجاع:</label>
+                <input type="text" id="projectDate" class="form-control" placeholder="تاریخ شروع/ارجاع" required>
+
+                <button onclick="addProject()" class="btn btn-success w-100" id="addProjectBtn">
+                    <span id="addProjectText">➕ افزودن پروژه</span>
+                    <span id="addProjectLoading" class="loading" style="display: none;"></span>
+                </button>
+            </div>
+        </div>
+
+        <div id="profilePage">
+            <h3 class="text-center">پروفایل کاربری</h3>
+            <div class="card p-3 mt-3">
+                <p><strong>نام:</strong> <span id="profileName"></span></p>
+                <p><strong>نام کاربری:</strong> <span id="profileUsername"></span></p>
+                <p><strong>ایمیل:</strong> <span id="profileEmail"></span></p>
+                <p><strong>شماره موبایل:</strong> <span id="profileMobile"></span></p>
+                <p><strong>وضعیت اشتراک:</strong> <span id="profileSubscriptionStatus"></span></p>
+
+                <h5 class="mt-4">لیست واریزی‌های من:</h5>
+                <div id="userPaymentsList">
+                    <table class="plans-list-table">
+                        <thead>
+                            <tr>
+                                <th>پلن/کد</th>
+                                <th>مبلغ (تومان)</th>
+                                <th>تاریخ</th>
+                                <th>نوع</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userPaymentsTableBody">
+                            <tr><td colspan="4" class="text-center text-muted">در حال بارگذاری واریزی‌ها...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <h5 class="mt-4">تغییر رمز عبور:</h5>
+                <label for="currentPassword" class="form-label required">رمز عبور فعلی:</label>
+                <div class="password-container">
+                    <input type="password" id="currentPassword" placeholder="رمز عبور فعلی" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('currentPassword')">
+                        <i class="bi bi-eye-slash"></i>
+                    </button>
+                </div>
+
+                <label for="newPassword" class="form-label required">رمز عبور جدید:</label>
+                <div class="password-container">
+                    <input type="password" id="newPassword" placeholder="رمز عبور جدید" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('newPassword')">
+                        <i class="bi bi-eye-slash"></i>
+                    </button>
+                </div>
+
+                <label for="confirmNewPassword" class="form-label required">تکرار رمز عبور جدید:</label>
+                <div class="password-container">
+                    <input type="password" id="confirmNewPassword" placeholder="تکرار رمز عبور جدید" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirmNewPassword')">
+                        <i class="bi bi-eye-slash"></i>
+                    </button>
+                </div>
+
+                <button class="btn btn-primary w-100 mb-2" onclick="changePassword()">تغییر رمز عبور</button>
+                <div id="passwordChangeError" class="text-danger mt-2" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div id="subscriptionPage" style="display: none;">
+            <h3 class="text-center">مدیریت اشتراک</h3>
+            <div class="card p-3 mt-3">
+                <h5>وضعیت اشتراک فعلی:</h5>
+                <p>وضعیت: <span id="currentSubscriptionStatus"></span></p>
+                <p>تاریخ شروع: <span id="currentSubscriptionStartDate"></span></p>
+                <p>تاریخ انقضا: <span id="currentSubscriptionEndDate"></span></p>
+
+                <h5 class="mt-4">خرید اشتراک:</h5>
+                <div id="subscriptionPlansList">
+                </div>
+
+                <h5 class="mt-4">فعال‌سازی با کد هدیه:</h5>
+                <div class="form-group">
+                    <label for="giftCodeInput" class="form-label required">کد هدیه:</label>
+                    <input type="text" id="giftCodeInput" class="form-control" placeholder="کد هدیه را وارد کنید..." required>
+                </div>
+                <button class="btn btn-success w-100 mb-2" id="redeemGiftCodeBtn" onclick="redeemGiftCode()">فعال‌سازی کد هدیه</button>
+                <div id="giftCodeRedeemError" class="text-danger mt-2" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div id="successAlert" class="alert alert-success mt-2" style="display: none;"></div>
+    </div>
 </div>
 
 <footer class="footer">طراحی توسط Hamed Foodaji</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">ویرایش کاربر</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editUserId">
+                <label for="editUserName" class="form-label required">نام:</label>
+                <input type="text" id="editUserName" class="form-control mb-3" required>
 
+                <label for="editUserUsername" class="form-label required">نام کاربری:</label>
+                <input type="text" id="editUserUsername" class="form-control mb-3" required disabled> <label for="editUserEmail" class="form-label">ایمیل:</label>
+                <input type="email" id="editUserEmail" class="form-control mb-3">
+
+                <label for="editUserMobile" class="form-label required">شماره موبایل:</label>
+                <input type="tel" id="editUserMobile" class="form-control mb-3" required>
+
+                <label for="editUserRole" class="form-label required">نقش:</label>
+                <select id="editUserRole" class="form-control mb-3">
+                    <option value="user">کاربر</option>
+                    <option value="admin">مدیر</option>
+                </select>
+                <div id="editUserError" class="text-danger mt-2" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-primary" onclick="saveEditedUser()">ذخیره تغییرات</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const API_URL = "https://api.jsonbin.io/v3/b/67a9a0a1e41b4d34e487fdd1";
-    const API_KEY = "$2a$10$K0GxG/YDDvwcCOicoQSc3OIPqPpUflP5JvKxVStM6sdQYjq4LdXKi";
-    
-    // مراحل پروژه
+    // Replace with your actual JSONBin.io API URL and Master Key
+    const API_URL = "https://api.jsonbin.io/v3/b/67a9a0a1e41b4d34e487fdd1"; // Updated Bin ID
+    const API_KEY = "$2a$10$K0GxG/YDDvwcCOicoQSc3OIPqPpUflP5JvKxVStM6sdQYjq4LdXKi"; // Replace with your Master Key
+
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD_HASH = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f77f7a27ee"; // SHA-256 hash of "admin"
+
+    const REPORT_CHAR_LIMIT = 1000; // Character limit for report text
+
+    let currentUser = null; // Stores the logged-in user object
+    let allUsers = []; // Cache for all users
+    let allProjects = []; // Cache for all projects (including admin's own projects now)
+    let allPlans = []; // Cache for subscription plans
+    let allGiftCodes = []; // Cache for gift codes
+    let allPayments = []; // Cache for payments
+
+    let isSubscriptionActive = false; // Global flag for current user's subscription status
+
+    // Project Stages Configuration
     const PROJECT_STAGES = [
         { id: 'assembly', name: 'همبندی' },
         { id: 'piping', name: 'لوله گذاری' },
         { id: 'wiring', name: 'سیم کشی' },
         { id: 'equipment', name: 'نصب تجهیزات' }
     ];
-    
-    // تابع برای دریافت تاریخ شمسی فعلی
+
+    // Helper to convert Gregorian date to Persian date
     function getCurrentPersianDate() {
         const date = new Date();
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return new Intl.DateTimeFormat('fa-IR', options).format(date);
     }
-    
-    // نمایش پیام موفقیت
+
+    // Helper to convert Gregorian timestamp to Persian date
+    function convertTimestampToPersianDate(timestamp) {
+        if (!timestamp) return '';
+        const date = new Date(timestamp);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Intl.DateTimeFormat('fa-IR', options).format(date);
+    }
+
+     // Helper to get timestamp from Persian date string (basic - assumes YYYY/MM/DD or YYYY-MM-DD)
+    function getTimestampFromPersianDate(persianDate) {
+        if (!persianDate) return null;
+        // Simple split and reformat - requires proper handling for production
+        const parts = persianDate.replace(/\//g, '-').split('-');
+        if (parts.length === 3) {
+            // Assuming parts are [year, month, day]
+             // Note: This is a naive conversion for demonstration. Proper Persian date conversion is complex.
+            // For simplicity, we will treat it as a Gregorian date string.
+            const date = new Date(persianDate);
+            return isNaN(date.getTime()) ? null : date.getTime();
+        }
+        return null;
+    }
+
+
+    // SHA-256 Hashing function (client-side - NOT SECURE FOR PRODUCTION)
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hexHash;
+    }
+
+    // --- Loading Spinner Functions ---
+    function showLoadingSpinner() {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+
+    function hideLoadingSpinner() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    // UI Functions
     function showSuccessMessage(message) {
         const alertElement = document.getElementById("successAlert");
         alertElement.textContent = message;
         alertElement.style.display = "block";
         alertElement.style.opacity = "1";
-        
+
         setTimeout(() => {
             alertElement.style.opacity = "0";
             setTimeout(() => {
@@ -260,67 +979,291 @@
             }, 1000);
         }, 2000);
     }
-    
-    // نمایش/مخفی کردن بخش‌ها
+
+    function showPage(pageId) {
+        // Hide all pages
+        ['loginPage', 'registerPage', 'mainApp', 'profilePage', 'adminDashboard', 'userProjectSection', 'subscriptionPage', 'adminAllProjects'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+
+        const backToProjectsBtn = document.getElementById('backToProjectsBtn');
+
+        // Show the requested page
+        if (pageId === 'mainApp') {
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('userProjectSection').style.display = 'block';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('adminAllProjects').style.display = 'none';
+            backToProjectsBtn.style.display = 'none';
+
+
+            document.getElementById('welcomeMessage').textContent = `خوش آمدید، ${currentUser ? currentUser.name : 'مهمان'}`;
+            updateHeaderSubscriptionStatus();
+
+            if (currentUser && currentUser.role === 'admin') {
+                document.getElementById('adminPanelBtn').style.display = 'inline-block';
+                document.getElementById('subscriptionBtn').style.display = 'none';
+            } else {
+                document.getElementById('adminPanelBtn').style.display = 'none';
+                document.getElementById('subscriptionBtn').style.display = 'inline-block';
+            }
+            toggleSection('activeProjectsContainer', document.getElementById('toggleActiveBtn'));
+            updateMainPageUIBasedOnSubscription();
+        } else if (pageId === 'profilePage') {
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userProjectSection').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'block';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('adminAllProjects').style.display = 'none';
+
+            document.getElementById('adminPanelBtn').style.display = (currentUser && currentUser.role === 'admin') ? 'inline-block' : 'none';
+             document.getElementById('subscriptionBtn').style.display = (currentUser && currentUser.role === 'admin') ? 'none' : 'inline-block';
+            backToProjectsBtn.style.display = 'inline-block';
+            displayProfile();
+            displayUserPayments(); // Show user's payment list
+        } else if (pageId === 'subscriptionPage') {
+            if (currentUser && currentUser.role === 'admin') return;
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userProjectSection').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'block';
+            document.getElementById('adminAllProjects').style.display = 'none';
+
+            document.getElementById('adminPanelBtn').style.display = 'none';
+            document.getElementById('subscriptionBtn').style.display = 'inline-block';
+            backToProjectsBtn.style.display = 'inline-block';
+            displayCurrentSubscriptionStatus();
+            displaySubscriptionPlansForUser();
+        } else if (pageId === 'adminDashboard') {
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userProjectSection').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('adminAllProjects').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            document.getElementById('adminPanelBtn').style.display = 'inline-block';
+             document.getElementById('subscriptionBtn').style.display = 'none';
+            backToProjectsBtn.style.display = 'inline-block';
+            displayUsers();
+            displayPlans();
+            displayGiftCodes();
+            displayPayments();
+        } else if (pageId === 'adminAllProjects') {
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userProjectSection').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('adminAllProjects').style.display = 'block';
+            document.getElementById('adminPanelBtn').style.display = 'inline-block';
+            document.getElementById('subscriptionBtn').style.display = 'none';
+            backToProjectsBtn.style.display = 'inline-block';
+            displayAllUserProjectsForAdmin();
+        }
+        else {
+            document.getElementById(pageId).style.display = 'block';
+        }
+    }
+
+    function showLoginPage() {
+        showPage('loginPage');
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+    }
+
+    function showRegisterPage() {
+        showPage('registerPage');
+        document.getElementById('registerError').style.display = 'none';
+        document.getElementById('registerName').value = '';
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerMobile').value = '';
+        document.getElementById('registerPassword').value = '';
+        document.getElementById('registerConfirmPassword').value = '';
+    }
+
+    function showProjectsPage() {
+        if (!currentUser) {
+            showLoginPage();
+            return;
+        }
+        showPage('mainApp');
+        toggleSection('activeProjectsContainer', document.getElementById('toggleActiveBtn'));
+    }
+
+    function showProfilePage() {
+        if (!currentUser) {
+            showLoginPage();
+            return;
+        }
+        showPage('profilePage');
+        document.getElementById('passwordChangeError').style.display = 'none';
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
+    }
+
+    function showAdminPanel() {
+        if (currentUser && currentUser.role === 'admin') {
+            showPage('adminDashboard');
+        } else {
+            alert("شما دسترسی به پنل مدیریت ندارید.");
+            showLoginPage();
+        }
+    }
+
+     function showAllUserProjectsForAdmin() {
+        if (currentUser && currentUser.role === 'admin') {
+            showPage('adminAllProjects');
+        } else {
+            alert("شما دسترسی به این بخش ندارید.");
+            showLoginPage();
+        }
+    }
+
+
+    function showSubscriptionPage() {
+        if (!currentUser || currentUser.role === 'admin') {
+            alert("این بخش فقط برای کاربران عادی قابل دسترسی است.");
+            showLoginPage();
+            return;
+        }
+        showPage('subscriptionPage');
+        displayCurrentSubscriptionStatus();
+        displaySubscriptionPlansForUser();
+    }
+
+
     function toggleSection(sectionId, button) {
-        // مخفی کردن تمام بخش‌ها
+        // Hide all project related sections
         document.getElementById('activeProjectsContainer').style.display = 'none';
         document.getElementById('completedProjectsContainer').style.display = 'none';
         document.getElementById('addProjectForm').style.display = 'none';
-        
-        // بازنشانی رنگ دکمه‌ها
+
+        // Reset button styles
         document.getElementById('toggleActiveBtn').classList.remove('btn-secondary');
         document.getElementById('toggleActiveBtn').classList.add('btn-primary');
         document.getElementById('toggleCompletedBtn').classList.remove('btn-secondary');
         document.getElementById('toggleCompletedBtn').classList.add('btn-info');
         document.getElementById('toggleAddProjectBtn').classList.remove('btn-secondary');
         document.getElementById('toggleAddProjectBtn').classList.add('btn-success');
-        
-        // نمایش بخش مورد نظر
+
+        // Show the selected section
         const section = document.getElementById(sectionId);
         if (section.style.display === 'block') {
-            section.style.display = 'none';
+            section.style.display = 'none'; // If already open, close it
         } else {
             section.style.display = 'block';
-            button.classList.remove('btn-primary', 'btn-info', 'btn-success');
+            button.classList.remove('btn-primary', 'btn-info', 'btn-success', 'btn-dark');
             button.classList.add('btn-secondary');
-            
-            // اگر بخش پروژه‌ها است، نمایش لیست
+
+            // If active/completed projects, display them
             if (sectionId === 'activeProjectsContainer' || sectionId === 'completedProjectsContainer') {
                 displayProjects();
             }
         }
     }
-    
-    // جستجوی زنده
+
+    function toggleProjectContent(index) {
+        const content = document.getElementById(`projectContent-${index}`);
+        const icon = document.getElementById(`toggleIcon-${index}`);
+        if (content && icon) {
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
+            } else {
+                content.style.display = 'none';
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
+            }
+        }
+    }
+
+
+    // Search function for projects
     document.getElementById("searchInput").addEventListener("input", function() {
         const searchTerm = this.value.toLowerCase();
         const activeProjects = document.querySelectorAll("#activeProjectsContainer .project-card");
         const completedProjects = document.querySelectorAll("#completedProjectsContainer .project-card");
-        
+
         activeProjects.forEach(card => {
             const projectName = card.querySelector("h5").textContent.toLowerCase();
             card.style.display = projectName.includes(searchTerm) ? "block" : "none";
         });
-        
+
         completedProjects.forEach(card => {
             const projectName = card.querySelector("h5").textContent.toLowerCase();
             card.style.display = projectName.includes(searchTerm) ? "block" : "none";
         });
     });
 
-    async function fetchProjects() {
-        try {
-            const response = await fetch(API_URL, { headers: { "X-Master-Key": API_KEY } });
-            const data = await response.json();
-            return data.record.projects || [];
-        } catch (error) {
-            console.error("خطا در دریافت پروژه‌ها:", error);
-            return [];
+    // Password visibility toggle
+    function togglePasswordVisibility(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = field.nextElementSibling.querySelector('i'); // Assuming icon is inside the button
+        if (field.type === "password") {
+            field.type = "text";
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        } else {
+            field.type = "password";
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
         }
     }
 
-    async function saveProjects(projects) {
+    // Enter key for login
+    document.getElementById("loginPassword").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent default form submission if any
+            login();
+        }
+    });
+
+    // --- API Interaction Functions ---
+    async function fetchData() {
+        showLoadingSpinner();
+        try {
+            const response = await fetch(API_URL, { headers: { "X-Master-Key": API_KEY } });
+
+            if (!response.ok) {
+                console.error(`خطا در دریافت داده‌ها از سرور: ${response.status} ${response.statusText}`);
+                try {
+                    const errorData = await response.json();
+                    console.error("جزئیات خطا از سرور:", errorData);
+                } catch (e) {
+                    // Ignore if response is not valid JSON
+                }
+                // Return default empty arrays if fetch fails
+                return { users: [], projects: [], plans: [], giftCodes: [], payments: [] };
+            }
+
+            const data = await response.json();
+
+            if (data && data.record) {
+                return data.record;
+            } else {
+                console.warn("داده‌های دریافتی فاقد 'record' است یا فرمت مورد انتظار را ندارد:", data);
+                // Return default empty arrays if 'record' is missing
+                return { users: [], projects: [], plans: [], giftCodes: [], payments: [] };
+            }
+        } catch (error) {
+            console.error("خطای کلی در فرآیند دریافت داده‌ها (مثلاً مشکل شبکه یا تجزیه JSON):", error);
+            // Return default empty arrays for network or JSON parsing errors
+            return { users: [], projects: [], plans: [], giftCodes: [], payments: [] };
+        } finally {
+            hideLoadingSpinner();
+        }
+    }
+
+    async function saveData(dataToSave) {
+        showLoadingSpinner();
         try {
             const response = await fetch(API_URL, {
                 method: "PUT",
@@ -328,61 +1271,420 @@
                     "Content-Type": "application/json",
                     "X-Master-Key": API_KEY
                 },
-                body: JSON.stringify({ projects })
+                body: JSON.stringify(dataToSave)
             });
             return response.ok;
         } catch (error) {
-            console.error("خطا در ذخیره پروژه‌ها:", error);
+            console.error("خطا در ذخیره داده‌ها:", error);
             return false;
+        } finally {
+            hideLoadingSpinner();
         }
     }
 
+    // --- User Authentication & Management ---
+    async function login() {
+        const username = document.getElementById("loginUsername").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+        const loginError = document.getElementById("loginError");
+        loginError.style.display = 'none';
+
+        if (!username || !password) {
+            loginError.textContent = "نام کاربری و رمز عبور نمی‌توانند خالی باشند.";
+            loginError.style.display = 'block';
+            return;
+        }
+
+        try {
+            // Special check for hardcoded admin user
+            if (username === ADMIN_USERNAME) {
+                const hashedPassword = await sha256(password);
+                if (hashedPassword === ADMIN_PASSWORD_HASH) {
+                    currentUser = { id: 'admin', name: 'مدیر', username: ADMIN_USERNAME, role: 'admin' };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showSuccessMessage("ورود موفقیت‌آمیز بود!");
+                    isSubscriptionActive = true; // Admin always has access
+                    updateHeaderSubscriptionStatus();
+                    showPage('mainApp'); // Show main app (which will show admin panel button)
+                    return;
+                } else {
+                    loginError.textContent = "نام کاربری یا رمز عبور اشتباه است.";
+                    loginError.style.display = 'block';
+                    return;
+                }
+            }
+
+            // Standard user login logic
+            const data = await fetchData();
+            allUsers = data.users || [];
+            allProjects = data.projects || [];
+            allPlans = data.plans || [];
+            allGiftCodes = data.giftCodes || [];
+            allPayments = data.payments || [];
+
+            const user = allUsers.find(u => u.username === username);
+
+            if (user) {
+                const hashedPassword = await sha256(password);
+                if (user.passwordHash === hashedPassword) {
+                    currentUser = { ...user, role: user.role || 'user' };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    checkSubscriptionStatus();
+                    updateHeaderSubscriptionStatus();
+                    showSuccessMessage(`خوش آمدید، ${currentUser.name}`);
+                    showPage('mainApp');
+                    updateMainPageUIBasedOnSubscription();
+                } else {
+                    loginError.textContent = "نام کاربری یا رمز عبور اشتباه است.";
+                    loginError.style.display = 'block';
+                }
+            } else {
+                loginError.textContent = "نام کاربری یا رمز عبور اشتباه است.";
+                loginError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            loginError.textContent = "خطا در ورود. لطفاً مجدداً تلاش کنید.";
+            loginError.style.display = 'block';
+        }
+    }
+
+    async function registerUser() {
+        const name = document.getElementById("registerName").value.trim();
+        const username = document.getElementById("registerUsername").value.trim();
+        const email = document.getElementById("registerEmail").value.trim();
+        const mobile = document.getElementById("registerMobile").value.trim();
+        const password = document.getElementById("registerPassword").value.trim();
+        const confirmPassword = document.getElementById("registerConfirmPassword").value.trim();
+        const registerError = document.getElementById("registerError");
+        registerError.style.display = 'none';
+
+        // Validation
+        if (!name || !username || !mobile || !password || !confirmPassword) {
+            registerError.textContent = "لطفا تمام فیلدهای اجباری را پر کنید.";
+            registerError.style.display = 'block';
+            return;
+        }
+        if (!/^[\u0600-\u06FF\s]+$/.test(name)) { // Persian characters only
+            registerError.textContent = "نام باید فارسی باشد.";
+            registerError.style.display = 'block';
+            return;
+        }
+        if (!/^[a-zA-Z0-9]+$/.test(username)) { // English characters only
+            registerError.textContent = "نام کاربری باید انگلیسی باشد و فقط شامل حروف و اعداد باشد.";
+            registerError.style.display = 'block';
+            return;
+        }
+        if (email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) { // Email format check
+            registerError.textContent = "فرمت ایمیل صحیح نیست.";
+            registerError.style.display = 'block';
+            return;
+        }
+        if (!/^09\d{9}$/.test(mobile)) { // Mobile format check (09xxxxxxxxx, 11 digits)
+            registerError.textContent = "شماره موبایل باید ۱۱ رقمی و با ۰۹ شروع شود.";
+            registerError.style.display = 'block';
+            return;
+        }
+        if (password !== confirmPassword) {
+            registerError.textContent = "رمز عبور و تکرار آن یکسان نیستند.";
+            registerError.style.display = 'block';
+            return;
+        }
+        if (password.length < 6) {
+            registerError.textContent = "رمز عبور باید حداقل ۶ کاراکتر باشد.";
+            registerError.style.display = 'block';
+            return;
+        }
+
+        try {
+            const data = await fetchData();
+            allUsers = data.users || [];
+            allProjects = data.projects || [];
+            allPlans = data.plans || [];
+            allGiftCodes = data.giftCodes || [];
+            allPayments = data.payments || [];
+
+            if (allUsers.some(u => u.username === username)) {
+                registerError.textContent = "نام کاربری تکراری است.";
+                registerError.style.display = 'block';
+                return;
+            }
+            if (allUsers.some(u => u.mobile === mobile)) {
+                registerError.textContent = "شماره موبایل تکراری است.";
+                registerError.style.display = 'block';
+                return;
+            }
+            if (email && allUsers.some(u => u.email === email)) {
+                registerError.textContent = "ایمیل تکراری است.";
+                registerError.style.display = 'block';
+                return;
+            }
+
+            const hashedPassword = await sha256(password);
+            const now = new Date();
+            const oneDayLater = new Date(now.getTime() + (24 * 60 * 60 * 1000)); // 1 day in milliseconds
+
+            const newUser = {
+                id: Date.now().toString(), // Simple unique ID
+                name,
+                username,
+                email,
+                mobile,
+                passwordHash: hashedPassword,
+                regDate: now.getTime(), // Store as timestamp
+                role: 'user',
+                subscription: {
+                    status: 'active',
+                    startDate: now.getTime(),
+                    endDate: oneDayLater.getTime(), // 1 day trial
+                    planId: 'initial_trial'
+                }
+            };
+            allUsers.push(newUser);
+
+            const success = await saveData({ users: allUsers, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+            if (success) {
+                showSuccessMessage("ثبت نام موفقیت‌آمیز بود! می‌توانید وارد شوید.");
+                showLoginPage();
+            } else {
+                registerError.textContent = "خطا در ثبت نام. لطفاً مجدداً تلاش کنید.";
+                registerError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Registration Error:", error);
+            registerError.textContent = "خطا در ثبت نام. لطفاً مجدداً تلاش کنید.";
+            registerError.style.display = 'block';
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        showSuccessMessage("با موفقیت خارج شدید.");
+        showLoginPage();
+    }
+
+    async function changePassword() {
+        const currentPass = document.getElementById('currentPassword').value.trim();
+        const newPass = document.getElementById('newPassword').value.trim();
+        const confirmNewPass = document.getElementById('confirmNewPassword').value.trim();
+        const passwordChangeError = document.getElementById('passwordChangeError');
+        passwordChangeError.style.display = 'none';
+
+        if (!currentPass || !newPass || !confirmNewPass) {
+            passwordChangeError.textContent = "لطفا تمام فیلدها را پر کنید.";
+            passwordChangeError.style.display = 'block';
+            return;
+        }
+        if (newPass !== confirmNewPass) {
+            passwordChangeError.textContent = "رمز عبور جدید و تکرار آن یکسان نیستند.";
+            passwordChangeError.style.display = 'block';
+            return;
+        }
+        if (newPass.length < 6) {
+            passwordChangeError.textContent = "رمز عبور جدید باید حداقل ۶ کاراکتر باشد.";
+            passwordChangeError.style.display = 'block';
+            return;
+        }
+
+        try {
+            const hashedPassword = await sha256(currentPass);
+            if (currentUser.passwordHash !== hashedPassword) {
+                passwordChangeError.textContent = "رمز عبور فعلی اشتباه است.";
+                passwordChangeError.style.display = 'block';
+                return;
+            }
+
+            const newHashedPassword = await sha256(newPass);
+            currentUser.passwordHash = newHashedPassword;
+
+            const data = await fetchData();
+            const userIndex = data.users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                data.users[userIndex] = currentUser;
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+                if (success) {
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Update local storage
+                    showSuccessMessage("رمز عبور با موفقیت تغییر یافت.");
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmNewPassword').value = '';
+                } else {
+                    passwordChangeError.textContent = "خطا در ذخیره تغییرات. لطفاً مجدداً تلاش کنید.";
+                    passwordChangeError.style.display = 'block';
+                }
+            } else {
+                passwordChangeError.textContent = "خطا: کاربر پیدا نشد.";
+                passwordChangeError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Password Change Error:", error);
+            passwordChangeError.textContent = "خطا در تغییر رمز عبور. لطفاً مجدداً تلاش کنید.";
+            passwordChangeError.style.display = 'block';
+        }
+    }
+
+    function displayProfile() {
+        if (!currentUser) {
+            showLoginPage();
+            return;
+        }
+        document.getElementById('profileName').textContent = currentUser.name;
+        document.getElementById('profileUsername').textContent = currentUser.username;
+        document.getElementById('profileEmail').textContent = currentUser.email || 'ثبت نشده';
+        document.getElementById('profileMobile').textContent = currentUser.mobile;
+
+        const profileSubscriptionStatus = document.getElementById('profileSubscriptionStatus');
+        if (profileSubscriptionStatus) {
+            checkSubscriptionStatus(); // Ensure status is up-to-date
+            let statusText = isSubscriptionActive ? 'فعال' : 'منقضی شده';
+            let endDateText = currentUser.subscription && currentUser.subscription.endDate ? `تا ${convertTimestampToPersianDate(currentUser.subscription.endDate)}` : 'نامشخص';
+            let startDateText = currentUser.subscription && currentUser.subscription.startDate ? `از ${convertTimestampToPersianDate(currentUser.subscription.startDate)}` : '';
+            profileSubscriptionStatus.innerHTML = `${statusText} ${startDateText} ${endDateText}`;
+            profileSubscriptionStatus.style.color = isSubscriptionActive ? 'green' : 'red';
+        }
+    }
+
+    // Function to check and update current user's subscription status
+    function checkSubscriptionStatus() {
+        if (!currentUser || currentUser.role === 'admin') { // Admin always has access
+            isSubscriptionActive = true;
+            return;
+        }
+
+        if (!currentUser.subscription || !currentUser.subscription.endDate) {
+            isSubscriptionActive = false;
+            console.warn("Subscription data missing for current user.");
+            return;
+        }
+
+        const now = new Date().getTime();
+        if (currentUser.subscription.endDate > now) {
+            isSubscriptionActive = true;
+        } else {
+            isSubscriptionActive = false;
+        }
+    }
+
+    // Function to update UI elements based on subscription status
+    function updateMainPageUIBasedOnSubscription() {
+        const addProjectBtn = document.getElementById('toggleAddProjectBtn');
+        const subscriptionMessage = document.getElementById('subscriptionMessage');
+        const redeemGiftCodeBtn = document.getElementById('redeemGiftCodeBtn');
+        const giftCodeInput = document.getElementById('giftCodeInput');
+
+
+        if (currentUser && currentUser.role === 'user') {
+            checkSubscriptionStatus(); // Ensure isSubscriptionActive is up-to-date
+
+            if (isSubscriptionActive) {
+                if (subscriptionMessage) subscriptionMessage.style.display = 'none';
+                if (addProjectBtn) addProjectBtn.disabled = false;
+                 if (redeemGiftCodeBtn) redeemGiftCodeBtn.disabled = true;
+                 if (giftCodeInput) giftCodeInput.disabled = true;
+            } else {
+                if (subscriptionMessage) {
+                    subscriptionMessage.innerHTML = `
+                        اشتراک شما به پایان رسیده است. برای فعالسازی همه قسمت‌های سامانه نسبت به تمدید اشتراک یا استفاده از کد هدیه اقدام نمایید.
+                        <button class="btn btn-warning btn-sm mt-2" onclick="showSubscriptionPage()">تمدید اشتراک</button>
+                    `;
+                    subscriptionMessage.style.display = 'block';
+                }
+                if (addProjectBtn) addProjectBtn.disabled = true;
+                if (redeemGiftCodeBtn) redeemGiftCodeBtn.disabled = false;
+                 if (giftCodeInput) giftCodeInput.disabled = false;
+
+            }
+        } else { // Admin or no user logged in
+            if (subscriptionMessage) subscriptionMessage.style.display = 'none';
+            if (addProjectBtn) addProjectBtn.disabled = false; // Admins can always add
+             if (redeemGiftCodeBtn) redeemGiftCodeBtn.disabled = true;
+             if (giftCodeInput) giftCodeInput.disabled = true;
+        }
+
+        // Re-render projects to apply button disabling/enabling (if not already showing admin projects)
+        if (currentUser && document.getElementById('userProjectSection').style.display === 'block') {
+            displayProjects();
+        }
+         // Update state of purchase buttons on subscription page
+        if (document.getElementById('subscriptionPage').style.display === 'block') {
+            displaySubscriptionPlansForUser(); // This function handles disabling buy buttons
+        }
+    }
+
+    // Update welcome message in mainApp for subscription status
+    function updateHeaderSubscriptionStatus() {
+        const welcomeMessageElement = document.getElementById('welcomeMessage');
+        let subscriptionStatusSpan = document.getElementById('headerSubscriptionStatus');
+
+        if (!subscriptionStatusSpan) {
+            subscriptionStatusSpan = document.createElement('span');
+            subscriptionStatusSpan.id = 'headerSubscriptionStatus';
+            welcomeMessageElement.appendChild(subscriptionStatusSpan);
+        }
+
+        if (currentUser && currentUser.role !== 'admin' && currentUser.subscription) {
+            checkSubscriptionStatus(); // Update status
+            let statusText = isSubscriptionActive ? 'فعال' : 'منقضی';
+            let endDateText = currentUser.subscription.endDate ? convertTimestampToPersianDate(currentUser.subscription.endDate) : '';
+            subscriptionStatusSpan.innerHTML = ` <small style="color: ${isSubscriptionActive ? 'green' : 'red'}; font-size: 0.8em;">(اشتراک: ${statusText} ${endDateText ? `تا ${endDateText}` : ''})</small>`;
+        } else if (subscriptionStatusSpan) {
+            subscriptionStatusSpan.innerHTML = ''; // Clear for admin or no user
+        }
+    }
+
+    // --- Project Management Functions (User-specific and Admin's own projects) ---
     async function addProject() {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای افزودن پروژه جدید، اشتراک شما باید فعال باشد.");
+            return;
+        }
+
         const name = document.getElementById("projectName").value.trim();
         const address = document.getElementById("projectAddress").value.trim();
         const date = document.getElementById("projectDate").value.trim();
-        
+
         if (!name) {
             alert("نام پروژه را وارد کنید!");
             return;
         }
-        
+
         if (!date) {
             alert("تاریخ را وارد کنید!");
             return;
         }
-        
-        // نمایش loading
+
         const addBtn = document.getElementById("addProjectBtn");
         const addText = document.getElementById("addProjectText");
         const loading = document.getElementById("addProjectLoading");
-        
+
         addBtn.disabled = true;
         addText.style.display = "none";
         loading.style.display = "inline-block";
-        
+
         try {
-            let projects = await fetchProjects();
-            
-            // ایجاد مراحل پروژه به صورت پیش‌فرض
+            const data = await fetchData();
+            allProjects = data.projects || [];
+
             const stages = PROJECT_STAGES.map(stage => ({
                 id: stage.id,
                 name: stage.name,
                 completed: false,
                 date: ''
             }));
-            
-            projects.push({ 
-                name, 
-                address, 
-                date, 
-                reports: [], 
+
+            allProjects.push({
+                userId: currentUser.id, // Link project to current user's ID
+                name,
+                address,
+                date,
+                reports: [],
                 completed: false,
                 stages: stages
             });
-            
-            const success = await saveProjects(projects);
-            
+
+            const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
             if (success) {
                 showSuccessMessage("پروژه با موفقیت اضافه شد");
                 document.getElementById("projectName").value = "";
@@ -404,49 +1706,116 @@
     }
 
     async function deleteProject(index) {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای حذف پروژه، اشتراک شما باید فعال باشد.");
+            return;
+        }
+
         if (confirm("آیا مطمئن هستید که می‌خواهید این پروژه را حذف کنید؟")) {
-            const projectName = document.querySelector(`#project-${index} h5`).textContent;
-            
-            // نمایش loading
-            const originalText = document.querySelector(`#project-${index} .btn-danger`).textContent;
-            document.querySelector(`#project-${index} .btn-danger`).innerHTML = '<span class="loading"></span>';
-            
+            // Find the specific project card's delete button using the index
+            const deleteBtn = document.querySelector(`#project-card-${index} .project-actions .btn-danger`);
+
+            if (deleteBtn) {
+                const originalText = deleteBtn.textContent;
+                deleteBtn.innerHTML = '<span class="loading"></span>';
+                deleteBtn.disabled = true;
+            }
+
             try {
-                let projects = await fetchProjects();
-                projects.splice(index, 1);
-                const success = await saveProjects(projects);
-                
-                if (success) {
-                    showSuccessMessage(`پروژه "${projectName}" حذف شد`);
-                    await displayProjects();
+                const data = await fetchData();
+                allProjects = data.projects || [];
+
+                // Filter projects relevant to the current user/admin
+                const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
+
+                if (index >= relevantProjects.length) {
+                    alert("خطا: پروژه مورد نظر یافت نشد.");
+                    return;
+                }
+
+                const projectToDelete = relevantProjects[index];
+                const globalIndexToDelete = allProjects.findIndex(p =>
+                    p.userId === projectToDelete.userId &&
+                    p.name === projectToDelete.name &&
+                    p.date === projectToDelete.date
+                );
+
+                if (globalIndexToDelete !== -1) {
+                    allProjects.splice(globalIndexToDelete, 1);
+                    const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
+                    if (success) {
+                        showSuccessMessage(`پروژه "${projectToDelete.name}" حذف شد`);
+                        await displayProjects();
+                    } else {
+                        alert("خطا در حذف پروژه");
+                    }
                 } else {
-                    alert("خطا در حذف پروژه");
+                    alert("خطا: پروژه در پایگاه داده یافت نشد.");
                 }
             } catch (error) {
                 console.error("خطا:", error);
                 alert("خطا در انجام عملیات");
             } finally {
-                document.querySelector(`#project-${index} .btn-danger`).textContent = originalText;
+                 if (deleteBtn) {
+                    deleteBtn.disabled = false;
+                    deleteBtn.textContent = originalText;
+                }
             }
         }
     }
 
-    async function addReport(index) {
-        document.getElementById(`reportForm-${index}`).style.display = "block";
-        document.getElementById(`reportText-${index}`).focus();
+    async function addReport(projectIndex) {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای افزودن گزارش، اشتراک شما باید فعال باشد.");
+            return;
+        }
+        // Ensure the report form is not already open by a different click, and toggle if needed
+        const reportForm = document.getElementById(`reportForm-${projectIndex}`);
+        if (reportForm.style.display === 'block') {
+            closeReportForm(projectIndex); // Close if already open
+        } else {
+            reportForm.style.display = "block";
+            document.getElementById(`reportText-${projectIndex}`).value = "";
+            document.getElementById(`reportDate-${projectIndex}`).value = getCurrentPersianDate();
+            document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-action", "add");
+            document.getElementById(`saveReportBtn-${projectIndex}`).removeAttribute("data-report-index");
+            document.getElementById(`reportText-${projectIndex}`).focus();
+        }
     }
 
     async function editReport(projectIndex, reportIndex) {
-        const reportText = document.querySelector(`#project-${projectIndex} .report-text-${reportIndex}`).innerText;
-        const reportDate = document.querySelector(`#project-${projectIndex} .report-date-${reportIndex}`).innerText;
-        document.getElementById(`reportForm-${projectIndex}`).style.display = "block";
-        document.getElementById(`reportText-${projectIndex}`).value = reportText;
-        document.getElementById(`reportDate-${projectIndex}`).value = reportDate;
-        document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-action", "edit");
-        document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-report-index", reportIndex);
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای ویرایش گزارش، اشتراک شما باید فعال باشد.");
+            return;
+        }
+        showLoadingSpinner(); // Show spinner for edit
+        try {
+            const data = await fetchData();
+            allProjects = data.projects || [];
+            const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
+            const report = relevantProjects[projectIndex].reports[reportIndex];
+
+            document.getElementById(`reportForm-${projectIndex}`).style.display = "block";
+            document.getElementById(`reportText-${projectIndex}`).value = report.text;
+            document.getElementById(`reportDate-${projectIndex}`).value = report.date;
+            document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-action", "edit");
+            document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-report-index", reportIndex);
+            document.getElementById(`reportText-${projectIndex}`).focus();
+        } finally {
+            hideLoadingSpinner();
+        }
     }
 
-    async function saveReport(projectIndex, action, reportIndex = null) {
+    async function saveReport(projectIndex) {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای ذخیره گزارش، اشتراک شما باید فعال باشد.");
+            return;
+        }
+        const saveBtn = document.getElementById(`saveReportBtn-${projectIndex}`);
+        const action = saveBtn.getAttribute("data-action");
+        const reportIndex = saveBtn.getAttribute("data-report-index");
+
         const reportText = document.getElementById(`reportText-${projectIndex}`).value.trim();
         const reportDate = document.getElementById(`reportDate-${projectIndex}`).value.trim();
 
@@ -454,29 +1823,46 @@
             alert("لطفا متن گزارش را وارد کنید.");
             return;
         }
-        
+
         if (!reportDate) {
             alert("لطفا تاریخ گزارش را وارد کنید.");
             return;
         }
-        
-        // نمایش loading
-        const saveBtn = document.getElementById(`saveReportBtn-${projectIndex}`);
+
+         if (reportText.length > REPORT_CHAR_LIMIT) {
+            alert(`متن گزارش نمی‌تواند بیشتر از ${REPORT_CHAR_LIMIT} کاراکتر باشد.`);
+            return;
+        }
+
         const originalText = saveBtn.textContent;
         saveBtn.innerHTML = '<span class="loading"></span>';
         saveBtn.disabled = true;
 
         try {
-            let projects = await fetchProjects();
+            const data = await fetchData();
+            allProjects = data.projects || [];
+            const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
 
-            if (action === 'add') {
-                projects[projectIndex].reports.push({ date: reportDate, text: reportText });
-            } else if (action === 'edit') {
-                projects[projectIndex].reports[reportIndex] = { date: reportDate, text: reportText };
+            const projectToUpdate = relevantProjects[projectIndex];
+            const globalProjectIndex = allProjects.findIndex(p =>
+                p.userId === projectToUpdate.userId &&
+                p.name === projectToUpdate.name &&
+                p.date === projectToUpdate.date
+            );
+
+            if (globalProjectIndex === -1) {
+                alert("خطا: پروژه یافت نشد.");
+                return;
             }
 
-            const success = await saveProjects(projects);
-            
+            if (action === 'add') {
+                allProjects[globalProjectIndex].reports.push({ date: reportDate, text: reportText });
+            } else if (action === 'edit') {
+                allProjects[globalProjectIndex].reports[reportIndex] = { date: reportDate, text: reportText };
+            }
+
+            const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
             if (success) {
                 showSuccessMessage(action === 'add' ? "گزارش با موفقیت اضافه شد" : "گزارش با موفقیت ویرایش شد");
                 await displayProjects();
@@ -495,28 +1881,58 @@
 
     function closeReportForm(projectIndex) {
         document.getElementById(`reportForm-${projectIndex}`).style.display = "none";
+        document.getElementById(`reportText-${projectIndex}`).value = "";
+        document.getElementById(`reportDate-${projectIndex}`).value = getCurrentPersianDate();
+        document.getElementById(`saveReportBtn-${projectIndex}`).setAttribute("data-action", "add");
+        document.getElementById(`saveReportBtn-${projectIndex}`).removeAttribute("data-report-index");
     }
 
     async function toggleStage(projectIndex, stageId) {
-        // نمایش loading
-        const checkbox = document.querySelector(`#project-${projectIndex} #stage-${stageId}`);
-        checkbox.disabled = true;
-        checkbox.innerHTML = '<span class="loading"></span>';
-        
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای تغییر مراحل پروژه، اشتراک شما باید فعال باشد.");
+            return;
+        }
+
+        const checkbox = document.querySelector(`#project-card-${projectIndex} #stage-${projectIndex}-${stageId}`);
+
+        const originalParent = checkbox.parentNode;
+        const spinner = document.createElement('span');
+        spinner.className = 'loading';
+        spinner.style.marginRight = '5px';
+
+        if (checkbox) {
+            checkbox.disabled = true;
+            originalParent.insertBefore(spinner, checkbox.nextSibling);
+        }
+
         try {
-            let projects = await fetchProjects();
-            const project = projects[projectIndex];
-            const stageIndex = project.stages.findIndex(s => s.id === stageId);
-            
+            const data = await fetchData();
+            allProjects = data.projects || [];
+            const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
+
+            const project = relevantProjects[projectIndex];
+            const globalProjectIndex = allProjects.findIndex(p =>
+                p.userId === project.userId &&
+                p.name === project.name &&
+                p.date === project.date
+            );
+
+            if (globalProjectIndex === -1) {
+                alert("خطا: پروژه یافت نشد.");
+                return;
+            }
+
+            const stageIndex = allProjects[globalProjectIndex].stages.findIndex(s => s.id === stageId);
+
             if (stageIndex !== -1) {
-                project.stages[stageIndex].completed = !project.stages[stageIndex].completed;
-                project.stages[stageIndex].date = project.stages[stageIndex].completed ? getCurrentPersianDate() : '';
-                
-                const success = await saveProjects(projects);
-                
+                allProjects[globalProjectIndex].stages[stageIndex].completed = !allProjects[globalProjectIndex].stages[stageIndex].completed;
+                allProjects[globalProjectIndex].stages[stageIndex].date = allProjects[globalProjectIndex].stages[stageIndex].completed ? getCurrentPersianDate() : '';
+
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
                 if (success) {
-                    showSuccessMessage(`مرحله ${project.stages[stageIndex].name} با موفقیت به‌روزرسانی شد`);
-                    await displayProjects();
+                    showSuccessMessage(`مرحله ${allProjects[globalProjectIndex].stages[stageIndex].name} با موفقیت به‌روزرسانی شد`);
+                    await displayProjects(); // Re-display to update UI
                 } else {
                     alert("خطا در به‌روزرسانی مرحله");
                 }
@@ -525,185 +1941,1258 @@
             console.error("خطا:", error);
             alert("خطا در انجام عملیات");
         } finally {
-            checkbox.disabled = false;
+            if (checkbox) checkbox.disabled = false;
+            if (spinner.parentNode) spinner.parentNode.removeChild(spinner);
         }
     }
 
-    async function displayProjects() {
-        let projects = await fetchProjects();
-        let activeContainer = document.getElementById("projectsList");
-        let completedContainer = document.getElementById("completedProjectsList");
-        activeContainer.innerHTML = "";
-        completedContainer.innerHTML = "";
-
-        projects.forEach((p, index) => {
-            let projectItem = document.createElement("div");
-            projectItem.className = p.completed ? "project-card completed-project" : "project-card";
-            projectItem.id = `project-${index}`;
-
-            let reportsList = p.reports.map((r, reportIndex) => {
-                return `
-                    <div class="report-item mb-2">
-                        <span class="report-date-${reportIndex}">${r.date}:</span>
-                        <span class="report-text-${reportIndex}">${r.text}</span>
-                        ${!p.completed ? `
-                        <button class="btn btn-outline-secondary btn-sm" onclick="editReport(${index}, ${reportIndex})">ویرایش</button>
-                        <button class="btn btn-outline-danger btn-sm" onclick="deleteReport(${index}, ${reportIndex})">حذف</button>
-                        ` : ''}
-                    </div>
-                `;
-            }).join("");
-
-            // ایجاد لیست مراحل پروژه
-            let stagesList = '';
-            if (p.stages && p.stages.length > 0) {
-                stagesList = '<div class="project-stages"><h6>مراحل پروژه:</h6>';
-                p.stages.forEach(stage => {
-                    stagesList += `
-                        <div class="stage-item ${stage.completed ? 'completed' : ''}">
-                            <input type="checkbox" 
-                                   id="stage-${stage.id}" 
-                                   class="stage-checkbox" 
-                                   ${stage.completed ? 'checked' : ''}
-                                   ${p.completed ? 'disabled' : ''}
-                                   onclick="toggleStage(${index}, '${stage.id}')">
-                            <label for="stage-${stage.id}">${stage.name}</label>
-                            ${stage.completed ? `<small> (تکمیل شده در ${stage.date})</small>` : ''}
-                        </div>
-                    `;
-                });
-                stagesList += '</div>';
-            }
-
-            if (p.completed) {
-                projectItem.innerHTML = `
-                    <h5>${p.name}</h5>
-                    <p>${p.address ? p.address : "آدرس ثبت نشده"} | تاریخ شروع: ${p.date}</p>
-                    ${stagesList}
-                    <div class="reports">${reportsList}</div>
-                    <button class="btn btn-warning btn-sm" onclick="toggleProjectStatus(${index})">لغو پایان کار</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteProject(${index})">حذف پروژه</button>
-                `;
-                completedContainer.appendChild(projectItem);
-            } else {
-                projectItem.innerHTML = `
-                    <h5>${p.name}</h5>
-                    <p>${p.address ? p.address : "آدرس ثبت نشده"} | تاریخ شروع: ${p.date}</p>
-                    ${stagesList}
-                    <button class="btn btn-danger btn-sm" onclick="deleteProject(${index})">❌ حذف</button>
-                    <button class="btn btn-primary btn-sm" onclick="addReport(${index})">➕ افزودن گزارش</button>
-                    <button class="btn btn-success btn-sm" onclick="toggleProjectStatus(${index})">پایان کار</button>
-                    <button class="btn btn-warning btn-sm" onclick="editProject(${index})">ویرایش مشخصات</button>
-                    <div class="reports mt-2">${reportsList}</div>
-                    
-                    <div id="reportForm-${index}" class="report-form" style="display: none;">
-                        <textarea id="reportText-${index}" placeholder="متن گزارش را وارد کنید..."></textarea><br>
-                        <input type="text" id="reportDate-${index}" value="${getCurrentPersianDate()}" /><br>
-                        <button id="saveReportBtn-${index}" class="btn btn-primary btn-sm" onclick="saveReport(${index}, 'add')">ثبت گزارش</button>
-                        <button class="btn btn-secondary btn-sm" onclick="closeReportForm(${index})">بستن</button>
-                    </div>
-                `;
-                activeContainer.appendChild(projectItem);
-            }
-        });
-    }
-
-    async function toggleProjectStatus(index) {
-        // نمایش loading
-        const btn = document.querySelector(`#project-${index} .btn-success, #project-${index} .btn-warning`);
-        const originalText = btn.textContent;
-        btn.innerHTML = '<span class="loading"></span>';
-        btn.disabled = true;
-
-        try {
-            let projects = await fetchProjects();
-            projects[index].completed = !projects[index].completed;
-            const success = await saveProjects(projects);
-            
-            if (success) {
-                showSuccessMessage(projects[index].completed ? "پروژه به لیست پایان یافته‌ها اضافه شد" : "پروژه به لیست فعال بازگشت");
-                await displayProjects();
-            } else {
-                alert("خطا در تغییر وضعیت پروژه");
-            }
-        } catch (error) {
-            console.error("خطا:", error);
-            alert("خطا در انجام عملیات");
-        } finally {
-            btn.disabled = false;
-            btn.textContent = originalText;
+    async function toggleProjectCompleted(index) {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای تغییر وضعیت پروژه، اشتراک شما باید فعال باشد.");
+            return;
         }
-    }
 
-    async function deleteReport(projectIndex, reportIndex) {
-        if (confirm("آیا مطمئن هستید که می‌خواهید این گزارش را حذف کنید؟")) {
-            // نمایش loading
-            const deleteBtn = document.querySelector(`#project-${projectIndex} .btn-outline-danger`);
-            const originalText = deleteBtn.textContent;
-            deleteBtn.innerHTML = '<span class="loading"></span>';
-            deleteBtn.disabled = true;
+         const toggleBtn = document.querySelector(`#project-card-${index} .project-actions .btn-toggle-completed`);
+
+        if (toggleBtn) {
+            const originalText = toggleBtn.textContent;
+            toggleBtn.innerHTML = '<span class="loading"></span>';
+            toggleBtn.disabled = true;
 
             try {
-                let projects = await fetchProjects();
-                projects[projectIndex].reports.splice(reportIndex, 1);
-                const success = await saveProjects(projects);
-                
+                const data = await fetchData();
+                allProjects = data.projects || [];
+                const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
+
+                const project = relevantProjects[index];
+                const globalProjectIndex = allProjects.findIndex(p =>
+                    p.userId === project.userId &&
+                    p.name === project.name &&
+                    p.date === project.date
+                );
+
+                if (globalProjectIndex === -1) {
+                    alert("خطا: پروژه یافت نشد.");
+                    return;
+                }
+
+                allProjects[globalProjectIndex].completed = !allProjects[globalProjectIndex].completed;
+
+                // If marking as completed, ensure all stages are completed
+                if (allProjects[globalProjectIndex].completed) {
+                    allProjects[globalProjectIndex].stages.forEach(stage => {
+                        if (!stage.completed) {
+                            stage.completed = true;
+                            stage.date = getCurrentPersianDate();
+                        }
+                    });
+                } else { // If marking as active, mark all stages as incomplete
+                     allProjects[globalProjectIndex].stages.forEach(stage => {
+                        stage.completed = false;
+                        stage.date = '';
+                    });
+                }
+
+
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
                 if (success) {
-                    showSuccessMessage("گزارش با موفقیت حذف شد");
+                    showSuccessMessage(`وضعیت پروژه "${allProjects[globalProjectIndex].name}" به‌روزرسانی شد`);
                     await displayProjects();
                 } else {
-                    alert("خطا در حذف گزارش");
+                    alert("خطا در به‌روزرسانی وضعیت پروژه");
                 }
             } catch (error) {
                 console.error("خطا:", error);
                 alert("خطا در انجام عملیات");
             } finally {
-                deleteBtn.disabled = false;
-                deleteBtn.textContent = originalText;
+                 if (toggleBtn) {
+                    toggleBtn.disabled = false;
+                    toggleBtn.textContent = originalText;
+                }
             }
+        } else {
+             console.error("Toggle button not found for project index", index);
+             alert("خطا در یافتن دکمه تغییر وضعیت.");
         }
     }
 
-    async function editProject(index) {
-        const projects = await fetchProjects();
-        const project = projects[index];
-        const newName = prompt("ویرایش نام پروژه:", project.name);
-        if (newName === null) return;
-        
-        const newAddress = prompt("ویرایش آدرس پروژه:", project.address);
-        if (newAddress === null) return;
-
-        // نمایش loading
-        const editBtn = document.querySelector(`#project-${index} .btn-warning`);
-        const originalText = editBtn.textContent;
-        editBtn.innerHTML = '<span class="loading"></span>';
-        editBtn.disabled = true;
+     async function editProject(index) {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای ویرایش مشخصات پروژه، اشتراک شما باید فعال باشد.");
+            return;
+        }
 
         try {
-            project.name = newName;
-            project.address = newAddress;
-            const success = await saveProjects(projects);
-            
-            if (success) {
-                showSuccessMessage("مشخصات پروژه با موفقیت ویرایش شد");
-                await displayProjects();
-            } else {
-                alert("خطا در ویرایش پروژه");
+            const data = await fetchData();
+            allProjects = data.projects || [];
+            const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
+
+            const project = relevantProjects[index];
+            if (!project) {
+                alert("پروژه مورد نظر یافت نشد.");
+                return;
             }
+
+            const newName = prompt("ویرایش نام پروژه:", project.name);
+            if (newName === null) return; // User cancelled
+
+            const newAddress = prompt("ویرایش آدرس پروژه:", project.address);
+            if (newAddress === null) return; // User cancelled
+
+            const newDate = prompt("ویرایش تاریخ شروع/ارجاع:", project.date);
+             if (newDate === null) return; // User cancelled
+
+
+            const editBtn = document.querySelector(`#project-card-${index} .project-actions .btn-warning`); // Select specific edit button
+            if (editBtn) {
+                const originalText = editBtn.textContent;
+                editBtn.innerHTML = '<span class="loading"></span>';
+                editBtn.disabled = true;
+
+
+                const globalProjectIndex = allProjects.findIndex(p =>
+                    p.userId === project.userId &&
+                    p.name === project.name &&
+                    p.date === project.date
+                );
+
+                if (globalProjectIndex === -1) {
+                    alert("خطا: پروژه در پایگاه داده یافت نشد.");
+                     editBtn.disabled = false;
+                     editBtn.textContent = originalText;
+                    return;
+                }
+
+                allProjects[globalProjectIndex].name = newName.trim() || project.name; // Prevent empty update
+                allProjects[globalProjectIndex].address = newAddress.trim();
+                 allProjects[globalProjectIndex].date = newDate.trim() || project.date;
+
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
+                if (success) {
+                    showSuccessMessage("مشخصات پروژه با موفقیت ویرایش شد");
+                    await displayProjects(); // Re-display to update UI
+                } else {
+                    alert("خطا در ویرایش پروژه");
+                }
+             } else {
+                 console.error("Edit button not found for project index", index);
+                 alert("خطا در یافتن دکمه ویرایش.");
+             }
         } catch (error) {
             console.error("خطا:", error);
             alert("خطا در انجام عملیات");
         } finally {
-            editBtn.disabled = false;
-            editBtn.textContent = originalText;
+             const editBtn = document.querySelector(`#project-card-${index} .project-actions .btn-warning`);
+             if (editBtn) {
+                editBtn.disabled = false;
+                editBtn.textContent = 'ویرایش'; // Restore text
+             }
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // تنظیم تاریخ شمسی فعلی در فرم افزودن پروژه
+
+    async function displayProjects() {
+        if (!currentUser) return;
+
+        const activeProjectsList = document.getElementById("projectsList");
+        const completedProjectsList = document.getElementById("completedProjectsList");
+        activeProjectsList.innerHTML = '<p class="text-center text-muted mt-3">در حال بارگذاری پروژه‌ها...</p>';
+        completedProjectsList.innerHTML = '<p class="text-center text-muted mt-3">در حال بارگذاری پروژه‌ها...</p>';
+
+        try {
+            const data = await fetchData();
+            allProjects = data.projects || [];
+            // Filter projects for the current user/admin
+            const userProjects = allProjects.filter(p => p.userId === currentUser.id);
+
+            activeProjectsList.innerHTML = '';
+            completedProjectsList.innerHTML = '';
+
+            if (userProjects.length === 0) {
+                activeProjectsList.innerHTML = '<p class="text-center text-muted mt-3">هنوز پروژه‌ای اضافه نکرده‌اید.</p>';
+                completedProjectsList.innerHTML = '<p class="text-center text-muted mt-3">پروژه تمام شده‌ای وجود ندارد.</p>';
+                return;
+            }
+
+            let hasActive = false;
+            let hasCompleted = false;
+
+            userProjects.forEach((project, index) => {
+                const card = document.createElement("div");
+                card.className = `project-card ${project.completed ? 'completed-project' : ''}`;
+                card.id = `project-card-${index}`;
+
+                const totalStages = project.stages ? project.stages.length : 0;
+                const completedStages = project.stages ? project.stages.filter(s => s.completed).length : 0;
+                const progressPercentage = totalStages > 0 ? ((completedStages / totalStages) * 100).toFixed(0) : 0;
+                const progressBarColor = progressPercentage === '100' ? 'bg-success' : (progressPercentage > 50 ? 'bg-info' : 'bg-warning');
+
+
+                const reportsHtml = project.reports.map((report, rIndex) => `
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-2">
+                        <div>
+                            <strong>گزارش ${rIndex + 1} (${report.date}):</strong> ${report.text}
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-1" ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''} onclick="editReport(${index}, ${rIndex})"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''} onclick="deleteReport(${index}, ${rIndex})"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+
+                const stagesHtml = `
+                    <div class="project-stages">
+                        <h6>مراحل پروژه:</h6>
+                        ${PROJECT_STAGES.map(stage => {
+                            const projectStage = project.stages ? project.stages.find(s => s.id === stage.id) : null;
+                            const isChecked = projectStage ? projectStage.completed : false;
+                            const stageDate = projectStage && projectStage.date ? ` (${projectStage.date})` : '';
+                            return `
+                                <div class="stage-item ${isChecked ? 'completed' : ''}">
+                                    <input type="checkbox" id="stage-${index}-${stage.id}"
+                                        class="stage-checkbox"
+                                        ${isChecked ? 'checked' : ''}
+                                        ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''}
+                                        onchange="toggleStage(${index}, '${stage.id}')">
+                                    <label for="stage-${index}-${stage.id}">${stage.name}${stageDate}</label>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="project-header" onclick="toggleProjectContent(${index})">
+                        <h5>${project.name}</h5>
+                         <i id="toggleIcon-${index}" class="bi bi-chevron-down"></i>
+                    </div>
+                     <div class="progress project-progress-bar">
+                        <div class="progress-bar ${progressBarColor}" role="progressbar"
+                            style="width: ${progressPercentage}%;" aria-valuenow="${progressPercentage}"
+                            aria-valuemin="0" aria-valuemax="100">${progressPercentage}%</div>
+                    </div>
+                    <div id="projectContent-${index}" style="display: none;" class="project-details">
+                        <p><strong>آدرس:</strong> ${project.address || 'نامشخص'}</p>
+                        <p><strong>تاریخ شروع/ارجاع:</strong> ${project.date}</p>
+                        ${stagesHtml}
+                        <h6>گزارشات:</h6>
+                        <div id="reportsList-${index}">${reportsHtml || '<p class="text-muted">گزارشی ثبت نشده است.</p>'}</div>
+
+                        <div id="reportForm-${index}" class="report-form" style="display: none;">
+                            <label for="reportText-${index}" class="form-label required">متن گزارش:</label>
+                            <textarea id="reportText-${index}" class="form-control" rows="3" placeholder="گزارش خود را بنویسید..." maxlength="${REPORT_CHAR_LIMIT}" required></textarea>
+                             <small class="form-text text-muted">حداکثر ${REPORT_CHAR_LIMIT} کاراکتر</small>
+                            <label for="reportDate-${index}" class="form-label required mt-2">تاریخ گزارش:</label>
+                            <input type="text" id="reportDate-${index}" class="form-control" placeholder="تاریخ" value="${getCurrentPersianDate()}" required>
+                            <button class="btn btn-primary btn-sm mt-2" id="saveReportBtn-${index}" ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''} onclick="saveReport(${index})">ذخیره گزارش</button>
+                            <button class="btn btn-secondary btn-sm mt-2" onclick="closeReportForm(${index})">لغو</button>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                         <button class="btn btn-sm btn-warning" ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''} onclick="editProject(${index})">ویرایش</button>
+                         <button class="btn btn-sm btn-danger" ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''} onclick="deleteProject(${index})">حذف پروژه</button>
+                         <button class="btn btn-sm btn-success btn-toggle-completed"
+                             ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''}
+                             onclick="toggleProjectCompleted(${index})">
+                             ${project.completed ? 'بازگشت به فعال' : 'پایان کار'}
+                         </button>
+                         <button class="btn btn-sm btn-primary"
+                              ${currentUser.role === 'user' && !isSubscriptionActive ? 'disabled' : ''}
+                              onclick="addReport(${index})">➕ افزودن گزارش</button>
+                    </div>
+                `;
+
+                if (project.completed) {
+                    completedProjectsList.appendChild(card);
+                    hasCompleted = true;
+                } else {
+                    activeProjectsList.appendChild(card);
+                    hasActive = true;
+                }
+            });
+
+            if (!hasActive) {
+                activeProjectsList.innerHTML = '<p class="text-center text-muted mt-3">پروژه فعالی وجود ندارد.</p>';
+            }
+            if (!hasCompleted) {
+                completedProjectsList.innerHTML = '<p class="text-center text-muted mt-3">پروژه تمام شده‌ای وجود ندارد.</p>';
+            }
+
+        } catch (error) {
+            console.error("Error displaying projects:", error);
+            activeProjectsList.innerHTML = '<p class="text-danger text-center mt-3">خطا در بارگذاری پروژه‌ها.</p>';
+            completedProjectsList.innerHTML = '<p class="text-danger text-center mt-3">خطا در بارگذاری پروژه‌ها.</p>';
+        }
+    }
+
+
+    async function deleteReport(projectIndex, reportIndex) {
+        if (!currentUser || (currentUser.role === 'user' && !isSubscriptionActive)) {
+            alert("برای حذف گزارش، اشتراک شما باید فعال باشد.");
+            return;
+        }
+        if (confirm("آیا مطمئن هستید که می‌خواهید این گزارش را حذف کنید؟")) {
+             // Find the specific report item using the project index and report index
+            const reportItem = document.querySelector(`#project-card-${projectIndex} #reportsList-${projectIndex} .d-flex.border-bottom:nth-child(${reportIndex + 1})`);
+            const deleteBtn = reportItem ? reportItem.querySelector('.btn-outline-danger') : null;
+
+            if (deleteBtn) {
+                const originalText = deleteBtn.textContent;
+                deleteBtn.innerHTML = '<span class="loading"></span>';
+                deleteBtn.disabled = true;
+            }
+
+            try {
+                const data = await fetchData();
+                allProjects = data.projects || [];
+                const relevantProjects = allProjects.filter(p => p.userId === currentUser.id);
+
+                const projectToUpdate = relevantProjects[projectIndex];
+                const globalProjectIndex = allProjects.findIndex(p =>
+                    p.userId === projectToUpdate.userId &&
+                    p.name === projectToUpdate.name &&
+                    p.date === projectToUpdate.date
+                );
+
+                if (globalProjectIndex === -1) {
+                    alert("خطا: پروژه یافت نشد.");
+                     if (deleteBtn) {
+                        deleteBtn.disabled = false;
+                        deleteBtn.textContent = originalText;
+                    }
+                    return;
+                }
+
+                allProjects[globalProjectIndex].reports.splice(reportIndex, 1);
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+                if (success) {
+                    showSuccessMessage("گزارش با موفقیت حذف شد.");
+                    await displayProjects(); // This will trigger global spinner
+                } else {
+                    alert("خطا در حذف گزارش.");
+                }
+            } catch (error) {
+                console.error("Error deleting report:", error);
+                alert("خطا در انجام عملیات.");
+            }
+        }
+    }
+
+
+    // --- Admin Panel Functions ---
+    async function displayUsers() {
+        const usersTableBody = document.getElementById("usersTableBody");
+        usersTableBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">در حال بارگذاری کاربران...</td></tr>';
+
+        try {
+            const data = await fetchData();
+            allUsers = data.users || [];
+            usersTableBody.innerHTML = '';
+
+            if (allUsers.length === 0) {
+                usersTableBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">کاربری یافت نشد.</td></tr>';
+                return;
+            }
+
+            allUsers.forEach(user => {
+                // Determine subscription status
+                let subscriptionStatus = 'منقضی شده';
+                let statusColor = 'red';
+                if (user.subscription && user.subscription.endDate) {
+                    const now = new Date().getTime();
+                    if (user.subscription.endDate > now) {
+                        subscriptionStatus = 'فعال';
+                        statusColor = 'green';
+                    }
+                }
+
+                const row = usersTableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="نام">${user.name}</td>
+                    <td data-label="نام کاربری">${user.username}</td>
+                    <td data-label="موبایل">${user.mobile}</td>
+                    <td data-label="تاریخ ثبت">${convertTimestampToPersianDate(user.regDate)}</td>
+                    <td data-label="نقش">${user.role === 'admin' ? 'مدیر' : 'کاربر'}</td>
+                    <td data-label="وضعیت اشتراک" style="color:${statusColor}">${subscriptionStatus}</td>
+                    <td data-label="عملیات">
+                        <button class="btn btn-sm btn-primary me-1" onclick="openEditUserModal('${user.id}')">ویرایش</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser('${user.id}')">حذف</button>
+                    </td>
+                `;
+            });
+        } catch (error) {
+            console.error("Error displaying users:", error);
+            usersTableBody.innerHTML = '<tr><td colspan="7" class="text-danger text-center">خطا در بارگذاری کاربران.</td></tr>';
+        }
+    }
+
+    async function deleteUser(userId) {
+        if (confirm("آیا مطمئن هستید که می‌خواهید این کاربر و تمام پروژه‌های او را حذف کنید؟ این عملیات برگشت‌ناپذیر است.")) {
+            try {
+                const data = await fetchData();
+                allUsers = data.users || [];
+                allProjects = data.projects || [];
+                allPayments = data.payments || [];
+
+                const userIndex = allUsers.findIndex(u => u.id === userId);
+                if (userIndex === -1) {
+                    alert("کاربر مورد نظر یافت نشد.");
+                    return;
+                }
+                 if (allUsers[userIndex].username === ADMIN_USERNAME) {
+                     alert("نمی‌توانید کاربر ادمین اصلی را حذف کنید.");
+                     return;
+                 }
+
+
+                // Remove user's projects
+                allProjects = allProjects.filter(p => p.userId !== userId);
+
+                // Remove user's payments
+                allPayments = allPayments.filter(p => p.userId !== userId);
+
+                // Remove user
+                allUsers.splice(userIndex, 1);
+
+                const success = await saveData({ users: allUsers, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+                if (success) {
+                    showSuccessMessage("کاربر و اطلاعات مرتبط با موفقیت حذف شدند.");
+                    displayUsers(); // Re-display users
+                } else {
+                    alert("خطا در حذف کاربر.");
+                }
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("خطا در انجام عملیات.");
+            }
+        }
+    }
+
+    let editUserModal; // Declare globally
+
+    function openEditUserModal(userId) {
+        const user = allUsers.find(u => u.id === userId);
+        if (!user) {
+            alert("کاربر یافت نشد.");
+            return;
+        }
+
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUserName').value = user.name;
+        document.getElementById('editUserUsername').value = user.username; // Cannot be edited
+        document.getElementById('editUserEmail').value = user.email || '';
+        document.getElementById('editUserMobile').value = user.mobile;
+        document.getElementById('editUserRole').value = user.role || 'user';
+        document.getElementById('editUserError').style.display = 'none';
+
+         if (user.username === ADMIN_USERNAME) {
+            document.getElementById('editUserRole').disabled = true; // Cannot change main admin role
+        } else {
+            document.getElementById('editUserRole').disabled = false;
+        }
+
+
+        // Initialize Bootstrap modal
+        editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        editUserModal.show();
+    }
+
+    async function saveEditedUser() {
+        const userId = document.getElementById('editUserId').value;
+        const name = document.getElementById('editUserName').value.trim();
+        const email = document.getElementById('editUserEmail').value.trim();
+        const mobile = document.getElementById('editUserMobile').value.trim();
+        const roleSelect = document.getElementById('editUserRole');
+        const role = roleSelect.value;
+        const editUserError = document.getElementById('editUserError');
+        editUserError.style.display = 'none';
+
+        if (!name || !mobile) {
+            editUserError.textContent = "نام و شماره موبایل نمی‌توانند خالی باشند.";
+            editUserError.style.display = 'block';
+            return;
+        }
+        if (!/^[\u0600-\u06FF\s]+$/.test(name)) {
+            editUserError.textContent = "نام باید فارسی باشد.";
+            editUserError.style.display = 'block';
+            return;
+        }
+        if (email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+            editUserError.textContent = "فرمت ایمیل صحیح نیست.";
+            editUserError.style.display = 'block';
+            return;
+        }
+        if (!/^09\d{9}$/.test(mobile)) {
+            editUserError.textContent = "شماره موبایل باید ۱۱ رقمی و با ۰۹ شروع شود.";
+            editUserError.style.display = 'block';
+            return;
+        }
+
+        try {
+            const data = await fetchData();
+            allUsers = data.users || [];
+
+            const userIndex = allUsers.findIndex(u => u.id === userId);
+            if (userIndex === -1) {
+                editUserError.textContent = "کاربر مورد نظر یافت نشد.";
+                editUserError.style.display = 'block';
+                return;
+            }
+
+             // Prevent changing main admin role
+            if (allUsers[userIndex].username === ADMIN_USERNAME && role !== 'admin') {
+                 editUserError.textContent = "نقش کاربر ادمین اصلی قابل تغییر نیست.";
+                 editUserError.style.display = 'block';
+                 return;
+            }
+
+
+            // Check for duplicate mobile/email (excluding current user)
+            if (allUsers.some(u => u.mobile === mobile && u.id !== userId)) {
+                editUserError.textContent = "شماره موبایل تکراری است.";
+                editUserError.style.display = 'block';
+                return;
+            }
+            if (email && allUsers.some(u => u.email === email && u.id !== userId)) {
+                editUserError.textContent = "ایمیل تکراری است.";
+                editUserError.style.display = 'block';
+                return;
+            }
+
+            allUsers[userIndex].name = name;
+            allUsers[userIndex].email = email;
+            allUsers[userIndex].mobile = mobile;
+            allUsers[userIndex].role = role;
+
+            const success = await saveData({ users: allUsers, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+            if (success) {
+                showSuccessMessage("اطلاعات کاربر با موفقیت به‌روزرسانی شد.");
+                displayUsers();
+                editUserModal.hide(); // Close the modal
+            } else {
+                editUserError.textContent = "خطا در ذخیره تغییرات. لطفاً مجدداً تلاش کنید.";
+                editUserError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Error saving edited user:", error);
+            editUserError.textContent = "خطا در انجام عملیات.";
+            editUserError.style.display = 'block';
+        }
+    }
+
+
+    async function displayPlans() {
+        const plansTableBody = document.getElementById("plansTableBody");
+        plansTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">در حال بارگذاری پلن‌ها...</td></tr>';
+
+        try {
+            const data = await fetchData();
+            allPlans = data.plans || [];
+            plansTableBody.innerHTML = '';
+
+            if (allPlans.length === 0) {
+                plansTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">پلنی یافت نشد.</td></tr>';
+                return;
+            }
+
+            allPlans.forEach(plan => {
+                const row = plansTableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="نام">${plan.name}</td>
+                    <td data-label="مدت (ماه)">${plan.durationMonths}</td>
+                    <td data-label="مبلغ (تومان)">${plan.price ? plan.price.toLocaleString() : '0'}</td>
+                    <td data-label="مبلغ با تخفیف (تومان)">${plan.discountedPrice ? plan.discountedPrice.toLocaleString() : 'ندارد'}</td>
+                    <td data-label="عملیات">
+                        <button class="btn btn-sm btn-danger" onclick="deletePlan('${plan.id}')">حذف</button>
+                    </td>
+                `;
+            });
+        } catch (error) {
+            console.error("Error displaying plans:", error);
+            plansTableBody.innerHTML = '<tr><td colspan="5" class="text-danger text-center">خطا در بارگذاری پلن‌ها.</td></tr>';
+        }
+    }
+
+    async function addPlan() {
+        const name = document.getElementById('planName').value.trim();
+        const duration = parseInt(document.getElementById('planDuration').value);
+        const price = parseInt(document.getElementById('planPrice').value);
+        const discountedPriceInput = document.getElementById('planDiscountedPrice').value.trim();
+        const discountedPrice = discountedPriceInput === '' ? null : parseInt(discountedPriceInput);
+
+        const planError = document.getElementById('planError');
+        planError.style.display = 'none';
+
+        if (!name || isNaN(duration) || duration < 1 || isNaN(price) || price < 0 || (discountedPriceInput !== '' && (isNaN(discountedPrice) || discountedPrice < 0))) {
+            planError.textContent = "لطفا تمام فیلدهای اجباری را با مقادیر صحیح پر کنید.";
+            planError.style.display = 'block';
+            return;
+        }
+
+        try {
+            const data = await fetchData();
+            allPlans = data.plans || [];
+
+            if (allPlans.some(p => p.name === name)) {
+                planError.textContent = "پلنی با این نام از قبل وجود دارد.";
+                planError.style.display = 'block';
+                return;
+            }
+
+            const newPlan = {
+                id: Date.now().toString(),
+                name,
+                durationMonths: duration,
+                price,
+                discountedPrice: discountedPrice
+            };
+            allPlans.push(newPlan);
+
+            const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+            if (success) {
+                showSuccessMessage("پلن با موفقیت اضافه شد.");
+                document.getElementById('planName').value = '';
+                document.getElementById('planDuration').value = '';
+                document.getElementById('planPrice').value = '';
+                document.getElementById('planDiscountedPrice').value = '';
+                displayPlans();
+            } else {
+                planError.textContent = "خطا در افزودن پلن.";
+                planError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Error adding plan:", error);
+            planError.textContent = "خطا در انجام عملیات.";
+            planError.style.display = 'block';
+        }
+    }
+
+    async function deletePlan(planId) {
+        if (confirm("آیا مطمئن هستید که می‌خواهید این پلن را حذف کنید؟")) {
+            try {
+                const data = await fetchData();
+                allPlans = data.plans || [];
+                const initialLength = allPlans.length;
+                allPlans = allPlans.filter(p => p.id !== planId);
+
+                if (allPlans.length === initialLength) {
+                    alert("پلن مورد نظر یافت نشد.");
+                    return;
+                }
+
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+                if (success) {
+                    showSuccessMessage("پلن با موفقیت حذف شد.");
+                    displayPlans();
+                } else {
+                    alert("خطا در حذف پلن.");
+                }
+            } catch (error) {
+                console.error("Error deleting plan:", error);
+                alert("خطا در انجام عملیات.");
+            }
+        }
+    }
+
+    async function displayGiftCodes() {
+        const giftCodesTableBody = document.getElementById("giftCodesTableBody");
+        giftCodesTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">در حال بارگذاری کدهای هدیه...</td></tr>';
+
+        try {
+            const data = await fetchData();
+            allGiftCodes = data.giftCodes || [];
+            giftCodesTableBody.innerHTML = '';
+
+            if (allGiftCodes.length === 0) {
+                giftCodesTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">کد هدیه‌ای یافت نشد.</td></tr>';
+                return;
+            }
+
+            allGiftCodes.forEach(code => {
+                const row = giftCodesTableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="کد">${code.code}</td>
+                    <td data-label="استفاده‌های باقی‌مانده">${code.usesRemaining}</td>
+                    <td data-label="مدت اشتراک (ماه)">${code.durationMonths}</td>
+                    <td data-label="تاریخ انقضا کد">${convertTimestampToPersianDate(code.expiryDate)}</td>
+                    <td data-label="عملیات">
+                        <button class="btn btn-sm btn-danger" onclick="deleteGiftCode('${code.id}')">حذف</button>
+                    </td>
+                `;
+            });
+        } catch (error) {
+            console.error("Error displaying gift codes:", error);
+            giftCodesTableBody.innerHTML = '<tr><td colspan="5" class="text-danger text-center">خطا در بارگذاری کدهای هدیه.</td></tr>';
+        }
+    }
+
+    async function addGiftCode() {
+        const code = document.getElementById('giftCode').value.trim();
+        const uses = parseInt(document.getElementById('giftCodeUses').value);
+        const duration = parseInt(document.getElementById('giftCodeDuration').value);
+        const expiryDateString = document.getElementById('giftCodeExpiry').value;
+        const giftCodeError = document.getElementById('giftCodeError');
+        giftCodeError.style.display = 'none';
+
+        if (!code || isNaN(uses) || uses < 1 || isNaN(duration) || duration < 1 || !expiryDateString) {
+            giftCodeError.textContent = "لطفا تمام فیلدهای اجباری را با مقادیر صحیح پر کنید.";
+            giftCodeError.style.display = 'block';
+            return;
+        }
+
+        const expiryDate = new Date(expiryDateString);
+        const expiryTimestamp = expiryDate.getTime();
+
+        if (isNaN(expiryTimestamp)) {
+             giftCodeError.textContent = "تاریخ انقضا صحیح نیست.";
+             giftCodeError.style.display = 'block';
+             return;
+        }
+
+
+        try {
+            const data = await fetchData();
+            allGiftCodes = data.giftCodes || [];
+
+            if (allGiftCodes.some(gc => gc.code === code)) {
+                giftCodeError.textContent = "این کد هدیه قبلاً ثبت شده است.";
+                giftCodeError.style.display = 'block';
+                return;
+            }
+
+            const newGiftCode = {
+                id: Date.now().toString(),
+                code,
+                usesRemaining: uses,
+                durationMonths: duration,
+                expiryDate: expiryTimestamp
+            };
+            allGiftCodes.push(newGiftCode);
+
+            const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+            if (success) {
+                showSuccessMessage("کد هدیه با موفقیت اضافه شد.");
+                document.getElementById('giftCode').value = '';
+                document.getElementById('giftCodeUses').value = '';
+                document.getElementById('giftCodeDuration').value = '';
+                document.getElementById('giftCodeExpiry').value = '';
+                displayGiftCodes();
+            } else {
+                giftCodeError.textContent = "خطا در افزودن کد هدیه.";
+                giftCodeError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Error adding gift code:", error);
+            giftCodeError.textContent = "خطا در انجام عملیات.";
+            giftCodeError.style.display = 'block';
+        }
+    }
+
+    async function deleteGiftCode(codeId) {
+        if (confirm("آیا مطمئن هستید که می‌خواهید این کد هدیه را حذف کنید؟")) {
+            try {
+                const data = await fetchData();
+                allGiftCodes = data.giftCodes || [];
+                const initialLength = allGiftCodes.length;
+                allGiftCodes = allGiftCodes.filter(gc => gc.id !== codeId);
+
+                if (allGiftCodes.length === initialLength) {
+                    alert("کد هدیه مورد نظر یافت نشد.");
+                    return;
+                }
+
+                const success = await saveData({ users: data.users, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+                if (success) {
+                    showSuccessMessage("کد هدیه با موفقیت حذف شد.");
+                    displayGiftCodes();
+                } else {
+                    alert("خطا در حذف کد هدیه.");
+                }
+            } catch (error) {
+                console.error("Error deleting gift code:", error);
+                alert("خطا در انجام عملیات.");
+            }
+        }
+    }
+
+    async function displayPayments() {
+        const paymentsTableBody = document.getElementById("paymentsTableBody");
+        paymentsTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">در حال بارگذاری واریزی‌ها...</td></tr>';
+
+        try {
+            const data = await fetchData();
+            allPayments = data.payments || [];
+            allUsers = data.users || []; // Ensure users are loaded to get names
+            paymentsTableBody.innerHTML = '';
+
+            if (allPayments.length === 0) {
+                paymentsTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">واریزی‌ای یافت نشد.</td></tr>';
+                return;
+            }
+
+            // Sort payments by date, newest first
+            allPayments.sort((a, b) => b.date - a.date);
+
+            allPayments.forEach(payment => {
+                const user = allUsers.find(u => u.id === payment.userId);
+                const userName = user ? user.name : 'ناشناس';
+                const row = paymentsTableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="نام کاربر">${userName}</td>
+                    <td data-label="پلن/کد">${payment.planName || payment.giftCode || 'N/A'}</td>
+                    <td data-label="مبلغ (تومان)">${payment.amountPaid ? payment.amountPaid.toLocaleString() : 'رایگان'}</td>
+                    <td data-label="تاریخ">${convertTimestampToPersianDate(payment.date)}</td>
+                    <td data-label="نوع">${payment.type === 'plan_purchase' ? 'خرید پلن' : 'استفاده از کد هدیه'}</td>
+                `;
+            });
+        } catch (error) {
+            console.error("Error displaying payments:", error);
+            paymentsTableBody.innerHTML = '<tr><td colspan="5" class="text-danger text-center">خطا در بارگذاری واریزی‌ها.</td></tr>';
+        }
+    }
+
+    // --- Subscription Management (User-specific) ---
+    async function displayCurrentSubscriptionStatus() {
+        if (!currentUser || currentUser.role === 'admin') return; // Only for regular users
+
+        const currentSubscriptionStatus = document.getElementById('currentSubscriptionStatus');
+        const currentSubscriptionStartDate = document.getElementById('currentSubscriptionStartDate');
+        const currentSubscriptionEndDate = document.getElementById('currentSubscriptionEndDate');
+
+        checkSubscriptionStatus(); // Update global flag
+
+        if (isSubscriptionActive) {
+            currentSubscriptionStatus.textContent = 'فعال';
+            currentSubscriptionStatus.style.color = 'green';
+        } else {
+            currentSubscriptionStatus.textContent = 'منقضی شده';
+            currentSubscriptionStatus.style.color = 'red';
+        }
+
+        if (currentUser.subscription) {
+            currentSubscriptionStartDate.textContent = currentUser.subscription.startDate ? convertTimestampToPersianDate(currentUser.subscription.startDate) : 'نامشخص';
+            currentSubscriptionEndDate.textContent = currentUser.subscription.endDate ? convertTimestampToPersianDate(currentUser.subscription.endDate) : 'نامشخص';
+        } else {
+            currentSubscriptionStartDate.textContent = 'نامشخص';
+            currentSubscriptionEndDate.textContent = 'نامشخص';
+        }
+    }
+
+    async function displaySubscriptionPlansForUser() {
+        if (!currentUser || currentUser.role === 'admin') return;
+
+        const subscriptionPlansList = document.getElementById('subscriptionPlansList');
+        subscriptionPlansList.innerHTML = '<p class="text-center text-muted mt-3">در حال بارگذاری پلن‌ها...</p>';
+
+        try {
+            const data = await fetchData();
+            allPlans = data.plans || [];
+            subscriptionPlansList.innerHTML = '';
+
+            if (allPlans.length === 0) {
+                subscriptionPlansList.innerHTML = '<p class="text-center text-muted mt-3">پلن اشتراکی یافت نشد.</p>';
+                return;
+            }
+
+            allPlans.sort((a, b) => a.durationMonths - b.durationMonths); // Sort by duration
+
+            const purchaseButtonDisabled = isSubscriptionActive ? 'disabled' : '';
+
+            allPlans.forEach(plan => {
+                const actualPrice = plan.discountedPrice !== null ? plan.discountedPrice : plan.price;
+                const oldPriceHtml = plan.discountedPrice !== null ? `<span class="discounted-price">${plan.price.toLocaleString()} تومان</span>` : '';
+
+                const planCard = document.createElement('div');
+                planCard.className = 'card mb-3';
+                planCard.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${plan.name} (${plan.durationMonths} ماهه)</h5>
+                        <p class="card-text">این پلن به شما اجازه می‌دهد تا ${plan.durationMonths} ماه از امکانات سامانه استفاده کنید.</p>
+                        <div class="price-info">
+                            <span class="price">${actualPrice.toLocaleString()} تومان</span>
+                            ${oldPriceHtml}
+                        </div>
+                        <button class="btn btn-primary w-100" ${purchaseButtonDisabled} onclick="buyPlan('${plan.id}', ${actualPrice})">خرید این پلن</button>
+                    </div>
+                `;
+                subscriptionPlansList.appendChild(planCard);
+            });
+        } catch (error) {
+            console.error("Error displaying subscription plans:", error);
+            subscriptionPlansList.innerHTML = '<p class="text-danger text-center mt-3">خطا در بارگذاری پلن‌ها.</p>';
+        }
+    }
+
+    async function buyPlan(planId, amount) {
+        if (!currentUser || currentUser.role === 'admin') {
+            alert("فقط کاربران عادی می‌توانند پلن خریداری کنند.");
+            return;
+        }
+         if (isSubscriptionActive) {
+            alert("اشتراک شما فعال است. برای خرید پلن جدید لطفا صبر کنید تا اشتراک فعلی منقضی شود یا آن را تمدید کنید.");
+            return;
+         }
+        const plan = allPlans.find(p => p.id === planId);
+        if (!plan) {
+            alert("پلن یافت نشد.");
+            return;
+        }
+
+        if (confirm(`آیا مطمئن هستید که می‌خواهید این پلن را با مبلغ ${amount.toLocaleString()} تومان خریداری کنید؟ (شما به درگاه زرین‌پال منتقل خواهید شد)`)) {
+            showLoadingSpinner();
+            try {
+                // Simulate ZarinPal gateway redirection and success callback
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+
+                const data = await fetchData();
+                allUsers = data.users || [];
+                allPlans = data.plans || [];
+                allPayments = data.payments || [];
+
+                const userIndex = allUsers.findIndex(u => u.id === currentUser.id);
+                if (userIndex === -1) {
+                    alert("خطا: کاربر یافت نشد.");
+                    return;
+                }
+
+                const now = new Date().getTime();
+                let currentEndDate = currentUser.subscription && currentUser.subscription.endDate && currentUser.subscription.endDate > now ? currentUser.subscription.endDate : now;
+
+                const newEndDate = new Date(currentEndDate);
+                newEndDate.setMonth(newEndDate.getMonth() + plan.durationMonths);
+
+                allUsers[userIndex].subscription = {
+                    status: 'active',
+                    startDate: now, // Start date is now for a new purchase
+                    endDate: newEndDate.getTime(),
+                    planId: planId
+                };
+                currentUser.subscription = allUsers[userIndex].subscription; // Update local currentUser
+
+                // Record payment
+                allPayments.push({
+                    id: Date.now().toString(),
+                    userId: currentUser.id,
+                    planId: plan.id,
+                    planName: plan.name,
+                    amountPaid: amount,
+                    date: new Date().getTime(),
+                    type: 'plan_purchase'
+                });
+
+                const success = await saveData({ users: allUsers, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
+                if (success) {
+                    showSuccessMessage("اشتراک شما با موفقیت فعال شد!");
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    checkSubscriptionStatus(); // Update status immediately
+                    updateHeaderSubscriptionStatus();
+                    displayCurrentSubscriptionStatus(); // Update status on page
+                    updateMainPageUIBasedOnSubscription(); // Re-enable features
+                    showProjectsPage(); // Redirect to projects
+                } else {
+                    alert("خطا در خرید اشتراک. لطفاً مجدداً تلاش کنید.");
+                }
+            } catch (error) {
+                console.error("Purchase Error:", error);
+                alert("خطا در فرآیند خرید.");
+            } finally {
+                hideLoadingSpinner();
+            }
+        }
+    }
+
+    async function redeemGiftCode() {
+        if (!currentUser || currentUser.role === 'admin') {
+            alert("فقط کاربران عادی می‌توانند کد هدیه فعال کنند.");
+            return;
+        }
+         if (isSubscriptionActive) {
+            alert("اشتراک شما فعال است. برای استفاده از کد هدیه لطفا صبر کنید تا اشتراک فعلی منقضی شود.");
+            return;
+         }
+
+        const giftCodeInput = document.getElementById('giftCodeInput').value.trim();
+        const giftCodeRedeemError = document.getElementById('giftCodeRedeemError');
+        giftCodeRedeemError.style.display = 'none';
+
+        if (!giftCodeInput) {
+            giftCodeRedeemError.textContent = "لطفاً کد هدیه را وارد کنید.";
+            giftCodeRedeemError.style.display = 'block';
+            return;
+        }
+
+        showLoadingSpinner();
+        try {
+            const data = await fetchData();
+            allUsers = data.users || [];
+            allGiftCodes = data.giftCodes || [];
+            allPayments = data.payments || [];
+
+            const userIndex = allUsers.findIndex(u => u.id === currentUser.id);
+            const giftCode = allGiftCodes.find(gc => gc.code === giftCodeInput);
+
+            if (!giftCode) {
+                giftCodeRedeemError.textContent = "کد هدیه نامعتبر است.";
+                giftCodeRedeemError.style.display = 'block';
+                return;
+            }
+
+            if (giftCode.usesRemaining <= 0) {
+                giftCodeRedeemError.textContent = "این کد هدیه منقضی شده یا تعداد استفاده آن به پایان رسیده است.";
+                giftCodeRedeemError.style.display = 'block';
+                return;
+            }
+
+            if (giftCode.expiryDate && new Date().getTime() > giftCode.expiryDate) {
+                giftCodeRedeemError.textContent = "تاریخ انقضای این کد هدیه گذشته است.";
+                giftCodeRedeemError.style.display = 'block';
+                return;
+            }
+
+            // Decrease uses remaining
+            giftCode.usesRemaining--;
+
+            let newEndDate = new Date().getTime() + (giftCode.durationMonths * 30 * 24 * 60 * 60 * 1000);
+
+            // If existing subscription, extend from its end date
+            if (currentUser.subscription && currentUser.subscription.endDate && currentUser.subscription.endDate > new Date().getTime()) {
+                newEndDate = currentUser.subscription.endDate + (giftCode.durationMonths * 30 * 24 * 60 * 60 * 1000);
+            }
+
+            allUsers[userIndex].subscription = {
+                status: 'active',
+                startDate: new Date().getTime(), // Start date is now for a new activation
+                endDate: newEndDate,
+                planId: 'gift_code_redeemed', // Indicate it's from a gift code
+                giftCodeId: giftCode.id
+            };
+            currentUser.subscription = allUsers[userIndex].subscription; // Update local currentUser
+
+            // Record payment (free via gift code)
+            allPayments.push({
+                id: Date.now().toString(),
+                userId: currentUser.id,
+                giftCode: giftCode.code,
+                amountPaid: 0, // Free
+                date: new Date().getTime(),
+                type: 'gift_code_redeem'
+            });
+
+            const success = await saveData({ users: allUsers, projects: allProjects, plans: allPlans, giftCodes: allGiftCodes, payments: allPayments });
+
+            if (success) {
+                showSuccessMessage("کد هدیه با موفقیت فعال شد و اشتراک شما تمدید گردید!");
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                 checkSubscriptionStatus(); // Update status immediately
+                updateHeaderSubscriptionStatus();
+                displayCurrentSubscriptionStatus();
+                updateMainPageUIBasedOnSubscription(); // Re-enable features
+            } else {
+                giftCodeRedeemError.textContent = "خطا در فعال‌سازی کد هدیه. لطفاً مجدداً تلاش کنید.";
+                giftCodeRedeemError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Error redeeming gift code:", error);
+            giftCodeRedeemError.textContent = "خطا در انجام عملیات.";
+            giftCodeRedeemError.style.display = 'block';
+        } finally {
+            hideLoadingSpinner();
+        }
+    }
+
+     async function displayUserPayments() {
+         if (!currentUser) return;
+
+         const userPaymentsTableBody = document.getElementById("userPaymentsTableBody");
+         userPaymentsTableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">در حال بارگذاری واریزی‌ها...</td></tr>';
+
+         try {
+            const data = await fetchData();
+            allPayments = data.payments || [];
+            const userPayments = allPayments.filter(p => p.userId === currentUser.id);
+
+            userPaymentsTableBody.innerHTML = '';
+
+            if (userPayments.length === 0) {
+                userPaymentsTableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">واریزی‌ای برای نمایش وجود ندارد.</td></tr>';
+                return;
+            }
+
+            // Sort payments by date, newest first
+            userPayments.sort((a, b) => b.date - a.date);
+
+            userPayments.forEach(payment => {
+                const row = userPaymentsTableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="پلن/کد">${payment.planName || payment.giftCode || 'N/A'}</td>
+                    <td data-label="مبلغ (تومان)">${payment.amountPaid ? payment.amountPaid.toLocaleString() : 'رایگان'}</td>
+                    <td data-label="تاریخ">${convertTimestampToPersianDate(payment.date)}</td>
+                    <td data-label="نوع">${payment.type === 'plan_purchase' ? 'خرید پلن' : 'استفاده از کد هدیه'}</td>
+                `;
+            });
+         } catch (error) {
+            console.error("Error displaying user payments:", error);
+            userPaymentsTableBody.innerHTML = '<tr><td colspan="4" class="text-danger text-center">خطا در بارگذاری واریزی‌ها.</td></tr>';
+         }
+     }
+
+
+    // --- Admin - View All User Projects ---
+    async function displayAllUserProjectsForAdmin() {
+        if (!currentUser || currentUser.role !== 'admin') return;
+
+        const allUserProjectsList = document.getElementById("allUserProjectsList");
+        allUserProjectsList.innerHTML = '<p class="text-center text-muted mt-3">در حال بارگذاری پروژه‌ها...</p>';
+
+        try {
+            const data = await fetchData();
+            allUsers = data.users || [];
+            allProjects = data.projects || [];
+
+            if (allProjects.length === 0) {
+                allUserProjectsList.innerHTML = '<p class="text-center text-muted mt-3">هیچ پروژه‌ای در سیستم ثبت نشده است.</p>';
+                return;
+            }
+
+            // Group projects by user
+            const projectsByUser = {};
+            allProjects.forEach(project => {
+                if (!projectsByUser[project.userId]) {
+                    projectsByUser[project.userId] = [];
+                }
+                projectsByUser[project.userId].push(project);
+            });
+
+            allUserProjectsList.innerHTML = '';
+
+            for (const userId in projectsByUser) {
+                const user = allUsers.find(u => u.id === userId);
+                const userName = user ? user.name : `کاربر ناشناس (ID: ${userId})`;
+                const userProjects = projectsByUser[userId];
+
+                const userProjectSection = document.createElement('div');
+                userProjectSection.className = 'card p-3 mb-4';
+                userProjectSection.innerHTML = `
+                    <h5 class="mb-3">پروژه‌های <span class="text-primary">${userName}</span>:</h5>
+                    <div id="adminUserProjectsContent-${userId}"></div>
+                `;
+                allUserProjectsList.appendChild(userProjectSection);
+
+                const userProjectsContentDiv = document.getElementById(`adminUserProjectsContent-${userId}`);
+                userProjects.forEach((project, index) => {
+                    const card = document.createElement("div");
+                    card.className = `project-card ${project.completed ? 'completed-project' : ''}`;
+                    // Note: No unique ID needed here as we don't perform actions on these cards in this view
+
+                    const totalStages = project.stages ? project.stages.length : 0;
+                    const completedStages = project.stages ? project.stages.filter(s => s.completed).length : 0;
+                    const progressPercentage = totalStages > 0 ? ((completedStages / totalStages) * 100).toFixed(0) : 0;
+                    const progressBarColor = progressPercentage === '100' ? 'bg-success' : (progressPercentage > 50 ? 'bg-info' : 'bg-warning');
+
+
+                    const reportsHtml = project.reports.map((report, rIndex) => `
+                        <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-2">
+                            <div>
+                                <strong>گزارش ${rIndex + 1} (${report.date}):</strong> ${report.text}
+                            </div>
+                        </div>
+                    `).join('');
+
+                    const stagesHtml = `
+                        <div class="project-stages">
+                            <h6>مراحل پروژه:</h6>
+                            ${PROJECT_STAGES.map(stage => {
+                                const projectStage = project.stages ? project.stages.find(s => s.id === stage.id) : null;
+                                const isChecked = projectStage ? projectStage.completed : false;
+                                const stageDate = projectStage && projectStage.date ? ` (${projectStage.date})` : '';
+                                return `
+                                    <div class="stage-item ${isChecked ? 'completed' : ''}">
+                                        <i class="bi ${isChecked ? 'bi-check-circle-fill' : 'bi-circle'}"></i>
+                                        <span class="me-2">${stage.name}${stageDate}</span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+
+                    card.innerHTML = `
+                        <div class="project-header" onclick="toggleProjectContentAdminView('${userId}-${index}')">
+                            <h5>${project.name}</h5>
+                            <i id="adminToggleIcon-${userId}-${index}" class="bi bi-chevron-down"></i>
+                        </div>
+                         <div class="progress project-progress-bar">
+                            <div class="progress-bar ${progressBarColor}" role="progressbar"
+                                style="width: ${progressPercentage}%;" aria-valuenow="${progressPercentage}"
+                                aria-valuemin="0" aria-valuemax="100">${progressPercentage}%</div>
+                        </div>
+                        <div id="adminProjectContent-${userId}-${index}" style="display: none;" class="project-details">
+                            <p><strong>آدرس:</strong> ${project.address || 'نامشخص'}</p>
+                            <p><strong>تاریخ شروع/ارجاع:</strong> ${project.date}</p>
+                            ${stagesHtml}
+                            <h6>گزارشات:</h6>
+                            <div id="adminReportsList-${userId}-${index}">${reportsHtml || '<p class="text-muted">گزارشی ثبت نشده است.</p>'}</div>
+                        </div>
+                    `;
+                    userProjectsContentDiv.appendChild(card);
+                });
+            }
+
+        } catch (error) {
+            console.error("Error displaying all user projects for admin:", error);
+            allUserProjectsList.innerHTML = '<p class="text-danger text-center mt-3">خطا در بارگذاری پروژه‌ها.</p>';
+        }
+    }
+
+     function toggleProjectContentAdminView(id) {
+        const content = document.getElementById(`adminProjectContent-${id}`);
+        const icon = document.getElementById(`adminToggleIcon-${id}`);
+         if (content && icon) {
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
+            } else {
+                content.style.display = 'none';
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
+            }
+         }
+     }
+
+
+    // Initial Load
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Set default date in add project form
         document.getElementById("projectDate").value = getCurrentPersianDate();
+
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            currentUser = JSON.parse(storedUser);
+            // Re-fetch data to ensure it's up-to-date, then proceed
+            const data = await fetchData();
+            allUsers = data.users || [];
+            allProjects = data.projects || [];
+            allPlans = data.plans || [];
+            allGiftCodes = data.giftCodes || [];
+            allPayments = data.payments || [];
+
+            // Ensure currentUser is from the fetched list to reflect latest changes
+            const fetchedUser = allUsers.find(u => u.id === currentUser.id);
+            if (fetchedUser) {
+                currentUser = { ...fetchedUser, role: fetchedUser.role || 'user', subscription: fetchedUser.subscription }; // Include subscription
+                showPage('mainApp');
+            } else if (currentUser.id === 'admin') { // Handle hardcoded admin
+                showPage('mainApp');
+            } else {
+                // User no longer exists in data, force logout
+                logout();
+            }
+        } else {
+            showLoginPage();
+        }
     });
 </script>
-
 </body>
 </html>
